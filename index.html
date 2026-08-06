@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SNS投稿アシスト</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: #f7f9f9;
+      color: #333;
+      padding: 16px;
+      margin: 0;
+    }
+    h1 {
+      font-size: 1.2rem;
+      text-align: center;
+      margin-bottom: 20px;
+      color: #1da1f2;
+    }
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      margin-bottom: 16px;
+    }
+    label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 6px;
+      font-size: 0.9rem;
+      color: #555;
+    }
+    .input-group {
+      display: flex;
+      align-items: center;
+      margin-bottom: 12px;
+      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .input-group span {
+      padding: 10px;
+      background: #f0f2f5;
+      border-right: 1px solid #ccc;
+      font-size: 1rem;
+    }
+    .input-group input {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      font-size: 1rem;
+      outline: none;
+    }
+    select, textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1rem;
+      box-sizing: border-box;
+      margin-bottom: 16px;
+    }
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+    .hashtag-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .hashtag-label {
+      background: #e1e8ed;
+      padding: 8px 12px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+    }
+    .hashtag-label input {
+      margin: 0;
+      width: 16px;
+      height: 16px;
+    }
+    button {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: bold;
+      color: #fff;
+      cursor: pointer;
+      margin-bottom: 12px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .btn-main { background-color: #1da1f2; }
+    .btn-sub { background-color: #17bf63; }
+    #toast {
+      visibility: hidden;
+      min-width: 200px;
+      background-color: #333;
+      color: #fff;
+      text-align: center;
+      border-radius: 8px;
+      padding: 12px;
+      position: fixed;
+      z-index: 1;
+      left: 50%;
+      bottom: 30px;
+      transform: translateX(-50%);
+      font-size: 0.9rem;
+    }
+    #toast.show {
+      visibility: visible;
+      animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    }
+    @keyframes fadein {
+      from {bottom: 0; opacity: 0;}
+      to {bottom: 30px; opacity: 1;}
+    }
+    @keyframes fadeout {
+      from {bottom: 30px; opacity: 1;}
+      to {bottom: 0; opacity: 0;}
+    }
+  </style>
+</head>
+<body>
+
+  <h1>SNS投稿アシスト</h1>
+
+  <div class="card">
+    <label for="category">シーン選択</label>
+    <select id="category" onchange="changeCategory()">
+      <option value="event">イベント・お祭り</option>
+      <option value="zoo_horse">競馬場・動物園</option>
+      <option value="live">TV・ラジオ実況</option>
+      <option value="food">飲食店</option>
+    </select>
+
+    <label>基本情報</label>
+    <div class="input-group">
+      <span>📅</span>
+      <input type="text" id="postDate" placeholder="2026.8.6">
+    </div>
+    <div class="input-group">
+      <span>🎟️</span>
+      <input type="text" id="eventName" placeholder="イベント名を入力">
+    </div>
+    <div class="input-group">
+      <span>🎪</span>
+      <input type="text" id="location" placeholder="場所を入力">
+    </div>
+
+    <label for="mainText">本文</label>
+    <textarea id="mainText" placeholder="投稿の本文をここに入力します"></textarea>
+
+    <label>ハッシュタグ (選択)</label>
+    <div id="hashtagContainer" class="hashtag-group">
+      <!-- JSで自動生成されます -->
+    </div>
+  </div>
+
+  <button class="btn-main" onclick="copyAll()">すべて合体してコピー</button>
+  <button class="btn-sub" onclick="copyTagsOnly()">タグのみコピー (速報用)</button>
+
+  <div id="toast">コピーしました！</div>
+
+  <script>
+    // 今日の日付を YYYY.M.D 形式で取得
+    function getTodayDate() {
+      const today = new Date();
+      return `${today.getFullYear()}.${today.getMonth() + 1}.${today.getDate()}`;
+    }
+
+    // カテゴリーごとの初期データ（イベント名、場所、本文、タグ）
+    const data = {
+      event: {
+        eventName: "YOSAKOIソーラン祭り",
+        location: "大通公園",
+        text: "チームの演舞、最高でした！\n\n（ここに感想などを入力）",
+        tags: ["#YOSAKOI", "#YOSAKOIソーラン", "#お祭り", "#イベント", "#写真"]
+      },
+      zoo_horse: {
+        eventName: "ばんえい競馬",
+        location: "帯広競馬場",
+        text: "第1レース \n1着 〇〇号\n\n（ここにレース結果などを入力）",
+        tags: ["#ばんえい競馬", "#帯広競馬場", "#競馬", "#馬", "#写真"]
+      },
+      live: {
+        eventName: "〇〇番組",
+        location: "自宅から",
+        text: "実況中！\n",
+        tags: ["#実況", "#TV", "#ラジオ", "#オンエア"]
+      },
+      food: {
+        eventName: "",
+        location: "",
+        text: "いただきます！\n",
+        tags: ["#グルメ", "#ランチ", "#ディナー", "#美味しい"]
+      }
+    };
+
+    function changeCategory() {
+      const category = document.getElementById('category').value;
+      const currentData = data[category];
+      
+      document.getElementById('postDate').value = getTodayDate();
+      document.getElementById('eventName').value = currentData.eventName;
+      document.getElementById('location').value = currentData.location;
+      document.getElementById('mainText').value = currentData.text;
+      
+      const container = document.getElementById('hashtagContainer');
+      container.innerHTML = '';
+      
+      currentData.tags.forEach(tag => {
+        const label = document.createElement('label');
+        label.className = 'hashtag-label';
+        
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.name = 'hashtags';
+        checkbox.value = tag;
+        checkbox.checked = true; // デフォルトで全てチェック
+        
+        label.appendChild(checkbox);
+        label.appendChild(document.createTextNode(tag));
+        container.appendChild(label);
+      });
+    }
+
+    // 選択されたハッシュタグをフォーマットする機能（複数ある場合は2行に分ける）
+    function getFormattedTags() {
+      const checkboxes = document.querySelectorAll('input[name="hashtags"]:checked');
+      const tags = Array.from(checkboxes).map(cb => cb.value);
+
+      if (tags.length === 0) return '';
+      if (tags.length === 1) return tags[0];
+
+      // ハッシュタグが複数個ある場合は2行続けて記載する
+      const mid = Math.ceil(tags.length / 2);
+      const line1 = tags.slice(0, mid).join(' ');
+      const line2 = tags.slice(mid).join(' ');
+      return line1 + '\n' + line2;
+    }
+
+    function copyToClipboard(text) {
+      navigator.clipboard.writeText(text).then(() => {
+        showToast();
+      }).catch(err => {
+        alert('コピーに失敗しました。');
+      });
+    }
+
+    function copyAll() {
+      const date = document.getElementById('postDate').value.trim();
+      const eventName = document.getElementById('eventName').value.trim();
+      const location = document.getElementById('location').value.trim();
+      const mainText = document.getElementById('mainText').value.trim();
+      
+      let headerText = '';
+      if (date) headerText += `📅${date}\n`;
+      if (eventName) headerText += `🎟️${eventName}\n`;
+      if (location) headerText += `🎪${location}\n`;
+      
+      const formattedTags = getFormattedTags();
+      
+      // ヘッダー（あれば）、本文、タグを結合
+      let finalParts = [];
+      if (headerText) finalParts.push(headerText.trim());
+      if (mainText) finalParts.push(mainText);
+      if (formattedTags) finalParts.push(formattedTags);
+
+      const finalString = finalParts.join('\n\n');
+      
+      copyToClipboard(finalString);
+    }
+
+    function copyTagsOnly() {
+      const formattedTags = getFormattedTags();
+      copyToClipboard(formattedTags);
+    }
+
+    function showToast() {
+      const toast = document.getElementById("toast");
+      toast.className = "show";
+      setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 3000);
+    }
+
+    // 初期化
+    window.onload = changeCategory;
+  </script>
+</body>
+</html>
