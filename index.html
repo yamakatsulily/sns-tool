@@ -173,13 +173,11 @@
   <div id="toast">コピーしました！</div>
 
   <script>
-    // 今日の日付を YYYY.M.D 形式で取得
     function getTodayDate() {
       const today = new Date();
       return `${today.getFullYear()}.${today.getMonth() + 1}.${today.getDate()}`;
     }
 
-    // カテゴリーごとの初期データ（イベント名、場所、本文、タグ）
     const data = {
       event: {
         eventName: "YOSAKOIソーラン祭り",
@@ -227,7 +225,7 @@
         checkbox.type = 'checkbox';
         checkbox.name = 'hashtags';
         checkbox.value = tag;
-        checkbox.checked = true; // デフォルトで全てチェック
+        checkbox.checked = true;
         
         label.appendChild(checkbox);
         label.appendChild(document.createTextNode(tag));
@@ -235,7 +233,6 @@
       });
     }
 
-    // 選択されたハッシュタグをフォーマットする機能（複数ある場合は2行に分ける）
     function getFormattedTags() {
       const checkboxes = document.querySelectorAll('input[name="hashtags"]:checked');
       const tags = Array.from(checkboxes).map(cb => cb.value);
@@ -243,7 +240,6 @@
       if (tags.length === 0) return '';
       if (tags.length === 1) return tags[0];
 
-      // ハッシュタグが複数個ある場合は2行続けて記載する
       const mid = Math.ceil(tags.length / 2);
       const line1 = tags.slice(0, mid).join(' ');
       const line2 = tags.slice(mid).join(' ');
@@ -271,7 +267,6 @@
       
       const formattedTags = getFormattedTags();
       
-      // ヘッダー（あれば）、本文、タグを結合
       let finalParts = [];
       if (headerText) finalParts.push(headerText.trim());
       if (mainText) finalParts.push(mainText);
@@ -293,7 +288,6 @@
       setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 3000);
     }
 
-    // 初期化
     window.onload = changeCategory;
   </script>
 </body>
