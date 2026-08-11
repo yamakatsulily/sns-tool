@@ -5,10 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SNS投稿アシスト</title>
   <style>
+    /* モダン＆シンプルなデザイン (iOS風) */
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background-color: #f7f9f9;
-      color: #333;
+      background-color: #f2f2f7; /* iOSのシステム背景色に近いグレー */
+      color: #1c1c1e;
       padding: 16px;
       margin: 0;
     }
@@ -16,118 +17,176 @@
       font-size: 1.2rem;
       text-align: center;
       margin-bottom: 20px;
-      color: #1da1f2;
+      color: #007aff; /* iOSのブルー */
+      font-weight: 600;
     }
     .card {
-      background: #fff;
-      border-radius: 12px;
+      background: #ffffff;
+      border-radius: 14px;
       padding: 16px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      box-shadow: 0 1px 5px rgba(0,0,0,0.05);
       margin-bottom: 16px;
     }
     label {
-      font-weight: bold;
+      font-weight: 600;
       display: block;
       margin-bottom: 6px;
-      font-size: 0.9rem;
-      color: #555;
+      font-size: 0.85rem;
+      color: #8e8e93; /* サブテキスト色 */
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
-    .input-group {
-      display: flex;
-      align-items: center;
-      margin-bottom: 12px;
-      background: #fff;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      overflow: hidden;
-    }
-    .input-group span {
-      padding: 10px;
-      background: #f0f2f5;
-      border-right: 1px solid #ccc;
-      font-size: 1rem;
-    }
-    .input-group input {
-      flex: 1;
-      padding: 10px;
-      border: none;
-      font-size: 1rem;
-      outline: none;
-    }
-    select, textarea {
+    
+    /* フォーム要素の共通スタイル */
+    select, input[type="text"], textarea {
       width: 100%;
       padding: 12px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
+      background-color: #f2f2f7;
+      border: 1px solid transparent;
+      border-radius: 10px;
       font-size: 1rem;
       box-sizing: border-box;
       margin-bottom: 16px;
+      color: #1c1c1e;
+      transition: border-color 0.2s, background-color 0.2s;
+      appearance: none; /* デフォルトの矢印などを消す */
     }
+    select:focus, input[type="text"]:focus, textarea:focus {
+      outline: none;
+      border-color: #007aff;
+      background-color: #ffffff;
+    }
+    
+    /* セレクトボックスにカスタム矢印を追加 */
+    .select-wrapper {
+      position: relative;
+    }
+    .select-wrapper::after {
+      content: "▼";
+      font-size: 0.8rem;
+      color: #8e8e93;
+      position: absolute;
+      right: 14px;
+      top: 14px;
+      pointer-events: none;
+    }
+
     textarea {
       resize: vertical;
       min-height: 100px;
+      line-height: 1.5;
     }
+
+    /* 動的入力フィールド用 */
+    .dynamic-field {
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #e5e5ea;
+    }
+    .dynamic-field:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+    .dynamic-field .icon-label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #333;
+    }
+    /* 自由入力用テキストボックス（初期非表示） */
+    .custom-input {
+      display: none; 
+      margin-top: 8px;
+    }
+
+    /* ハッシュタグ */
     .hashtag-group {
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
-      margin-bottom: 16px;
+      margin-bottom: 8px;
     }
     .hashtag-label {
-      background: #e1e8ed;
-      padding: 8px 12px;
+      background: #f2f2f7;
+      color: #007aff;
+      padding: 8px 14px;
       border-radius: 20px;
       font-size: 0.9rem;
+      font-weight: 500;
       display: flex;
       align-items: center;
-      gap: 4px;
+      gap: 6px;
       cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    .hashtag-label:hover {
+      background: #e5e5ea;
     }
     .hashtag-label input {
       margin: 0;
       width: 16px;
       height: 16px;
+      accent-color: #007aff; /* チェックボックスの色 */
     }
+
+    /* ボタン */
     button {
       width: 100%;
-      padding: 14px;
+      padding: 16px;
       border: none;
-      border-radius: 8px;
+      border-radius: 12px;
       font-size: 1rem;
-      font-weight: bold;
-      color: #fff;
+      font-weight: 600;
       cursor: pointer;
       margin-bottom: 12px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      transition: opacity 0.2s;
     }
-    .btn-main { background-color: #1da1f2; }
-    .btn-sub { background-color: #17bf63; }
+    button:active {
+      opacity: 0.8;
+    }
+    .btn-main { 
+      background-color: #007aff; 
+      color: #ffffff; 
+      box-shadow: 0 4px 10px rgba(0, 122, 255, 0.3);
+    }
+    .btn-sub { 
+      background-color: #34c759; /* iOSのグリーン */
+      color: #ffffff; 
+      box-shadow: 0 4px 10px rgba(52, 199, 89, 0.3);
+    }
+
+    /* トースト通知 */
     #toast {
       visibility: hidden;
       min-width: 200px;
-      background-color: #333;
+      background-color: rgba(28, 28, 30, 0.9);
       color: #fff;
       text-align: center;
-      border-radius: 8px;
-      padding: 12px;
+      border-radius: 20px;
+      padding: 12px 20px;
       position: fixed;
-      z-index: 1;
+      z-index: 100;
       left: 50%;
-      bottom: 30px;
+      bottom: 40px;
       transform: translateX(-50%);
       font-size: 0.9rem;
+      font-weight: 500;
+      backdrop-filter: blur(5px);
     }
     #toast.show {
       visibility: visible;
-      animation: fadein 0.5s, fadeout 0.5s 2.5s;
+      animation: fadein 0.3s, fadeout 0.4s 2.5s forwards;
     }
     @keyframes fadein {
-      from {bottom: 0; opacity: 0;}
-      to {bottom: 30px; opacity: 1;}
+      from {bottom: 20px; opacity: 0;}
+      to {bottom: 40px; opacity: 1;}
     }
     @keyframes fadeout {
-      from {bottom: 30px; opacity: 1;}
-      to {bottom: 0; opacity: 0;}
+      from {bottom: 40px; opacity: 1;}
+      to {bottom: 20px; opacity: 0; visibility: hidden;}
     }
   </style>
 </head>
@@ -136,32 +195,35 @@
   <h1>SNS投稿アシスト</h1>
 
   <div class="card">
-    <label for="category">シーン選択</label>
-    <select id="category" onchange="changeCategory()">
-      <option value="event">イベント・お祭り</option>
-      <option value="zoo_horse">競馬場・動物園</option>
-      <option value="live">TV・ラジオ実況</option>
-      <option value="food">飲食店</option>
-    </select>
+    <label for="category">Scene</label>
+    <div class="select-wrapper">
+      <select id="category" onchange="changeCategory()">
+        <option value="event">イベント・お祭り</option>
+        <option value="zoo_horse">競馬場・動物園</option>
+        <option value="live">TV・ラジオ実況</option>
+        <option value="food">飲食店</option>
+      </select>
+    </div>
+  </div>
 
-    <label>基本情報</label>
-    <div class="input-group">
-      <span>📅</span>
-      <input type="text" id="postDate" placeholder="2026.8.6">
-    </div>
-    <div class="input-group">
-      <span>🎟️</span>
-      <input type="text" id="eventName" placeholder="イベント名を入力">
-    </div>
-    <div class="input-group">
-      <span>🎪</span>
-      <input type="text" id="location" placeholder="場所を入力">
+  <div class="card">
+    <label>Details</label>
+    
+    <!-- 日付は固定で表示 -->
+    <div class="dynamic-field">
+      <div class="icon-label">📅 <span>日付</span></div>
+      <input type="text" id="postDate" placeholder="日付">
     </div>
 
-    <label for="mainText">本文</label>
+    <!-- ここに動的にプルダウンが生成されます -->
+    <div id="dynamicFieldsContainer"></div>
+  </div>
+
+  <div class="card">
+    <label for="mainText">Message</label>
     <textarea id="mainText" placeholder="投稿の本文をここに入力します"></textarea>
 
-    <label>ハッシュタグ (選択)</label>
+    <label>Hashtags</label>
     <div id="hashtagContainer" class="hashtag-group">
       <!-- JSで自動生成されます -->
     </div>
@@ -173,66 +235,136 @@
   <div id="toast">コピーしました！</div>
 
   <script>
+    // --- データの定義 ---
+    // 各カテゴリーごとに、必要な項目（プルダウンの選択肢）を定義します
+    const data = {
+      event: {
+        fields: [
+          { id: 'eventName', icon: '🎟️', label: 'イベント名', options: ['YOSAKOIソーラン祭り', 'さっぽろ雪まつり', 'ライラックまつり'] },
+          { id: 'location', icon: '🎪', label: '場所', options: ['大通公園', '札幌ドーム', '札幌駅前'] }
+        ],
+        text: "チームの演舞、最高でした！\n",
+        tags: ["#YOSAKOI", "#YOSAKOIソーラン", "#札幌", "#イベント", "#写真"]
+      },
+      zoo_horse: {
+        fields: [
+          { id: 'location', icon: '🎪', label: '場所', options: ['帯広競馬場', 'ノーザンホースパーク', '札幌市円山動物園'] },
+          { id: 'race', icon: '🐴', label: 'レース・競技', options: ['第1レース', 'メインレース', '中障害A飛越競技（予選）'] }
+        ],
+        text: "現地に到着しました！\n",
+        tags: ["#ばんえい競馬", "#帯広競馬場", "#ノーザンホースパーク", "#馬", "#写真"]
+      },
+      live: {
+        fields: [
+          { id: 'program', icon: '📺', label: '番組名', options: ['（お気に入りの番組名1）', '（お気に入りの番組名2）'] }
+        ],
+        text: "実況中！\n",
+        tags: ["#実況", "#TV", "#ラジオ", "#オンエア"]
+      },
+      food: {
+        fields: [
+          { id: 'shop', icon: '🍽️', label: 'お店', options: ['（お気に入りカフェ）', '（お気に入りレストラン）'] }
+        ],
+        text: "いただきます！\n",
+        tags: ["#札幌グルメ", "#ランチ", "#カフェ", "#美味しい"]
+      }
+    };
+
     function getTodayDate() {
       const today = new Date();
       return `${today.getFullYear()}.${today.getMonth() + 1}.${today.getDate()}`;
     }
 
-    const data = {
-      event: {
-        eventName: "YOSAKOIソーラン祭り",
-        location: "大通公園",
-        text: "チームの演舞、最高でした！\n\n（ここに感想などを入力）",
-        tags: ["#YOSAKOI", "#YOSAKOIソーラン", "#お祭り", "#イベント", "#写真"]
-      },
-      zoo_horse: {
-        eventName: "ばんえい競馬",
-        location: "帯広競馬場",
-        text: "第1レース \n1着 〇〇号\n\n（ここにレース結果などを入力）",
-        tags: ["#ばんえい競馬", "#帯広競馬場", "#競馬", "#馬", "#写真"]
-      },
-      live: {
-        eventName: "〇〇番組",
-        location: "自宅から",
-        text: "実況中！\n",
-        tags: ["#実況", "#TV", "#ラジオ", "#オンエア"]
-      },
-      food: {
-        eventName: "",
-        location: "",
-        text: "いただきます！\n",
-        tags: ["#グルメ", "#ランチ", "#ディナー", "#美味しい"]
-      }
-    };
-
+    // カテゴリーが変更された時の処理
     function changeCategory() {
       const category = document.getElementById('category').value;
       const currentData = data[category];
       
+      // 日付のセット
       document.getElementById('postDate').value = getTodayDate();
-      document.getElementById('eventName').value = currentData.eventName;
-      document.getElementById('location').value = currentData.location;
+      
+      // 本文とタグのセット
       document.getElementById('mainText').value = currentData.text;
       
-      const container = document.getElementById('hashtagContainer');
-      container.innerHTML = '';
-      
+      // ハッシュタグの生成
+      const tagContainer = document.getElementById('hashtagContainer');
+      tagContainer.innerHTML = '';
       currentData.tags.forEach(tag => {
         const label = document.createElement('label');
         label.className = 'hashtag-label';
-        
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
         checkbox.name = 'hashtags';
         checkbox.value = tag;
         checkbox.checked = true;
-        
         label.appendChild(checkbox);
         label.appendChild(document.createTextNode(tag));
-        container.appendChild(label);
+        tagContainer.appendChild(label);
+      });
+
+      // 動的フィールド（プルダウン）の生成
+      const fieldsContainer = document.getElementById('dynamicFieldsContainer');
+      fieldsContainer.innerHTML = '';
+
+      currentData.fields.forEach(field => {
+        const fieldDiv = document.createElement('div');
+        fieldDiv.className = 'dynamic-field';
+        
+        // ラベル（アイコン付き）
+        const labelDiv = document.createElement('div');
+        labelDiv.className = 'icon-label';
+        labelDiv.innerHTML = `${field.icon} <span>${field.label}</span>`;
+        fieldDiv.appendChild(labelDiv);
+
+        // プルダウンを包むラッパー
+        const selectWrapper = document.createElement('div');
+        selectWrapper.className = 'select-wrapper';
+
+        // プルダウン作成
+        const select = document.createElement('select');
+        select.id = `select_${field.id}`;
+        select.dataset.icon = field.icon; // コピー時にアイコンを使うためデータを持たせる
+        
+        // 選択肢を追加
+        field.options.forEach(opt => {
+          const option = document.createElement('option');
+          option.value = opt;
+          option.textContent = opt;
+          select.appendChild(option);
+        });
+        
+        // 「その他（自由入力）」を追加
+        const otherOption = document.createElement('option');
+        otherOption.value = "__other__";
+        otherOption.textContent = "その他（自由入力）";
+        select.appendChild(otherOption);
+
+        selectWrapper.appendChild(select);
+        fieldDiv.appendChild(selectWrapper);
+
+        // 自由入力用のテキストボックス（最初は非表示）
+        const customInput = document.createElement('input');
+        customInput.type = 'text';
+        customInput.id = `custom_${field.id}`;
+        customInput.className = 'custom-input';
+        customInput.placeholder = `${field.label}を入力してください`;
+        fieldDiv.appendChild(customInput);
+
+        // プルダウン変更時のイベント（その他を選んだらテキストボックスを表示）
+        select.addEventListener('change', function() {
+          if (this.value === '__other__') {
+            customInput.style.display = 'block';
+            customInput.focus();
+          } else {
+            customInput.style.display = 'none';
+          }
+        });
+
+        fieldsContainer.appendChild(fieldDiv);
       });
     }
 
+    // タグのフォーマット処理（複数時は2行に）
     function getFormattedTags() {
       const checkboxes = document.querySelectorAll('input[name="hashtags"]:checked');
       const tags = Array.from(checkboxes).map(cb => cb.value);
@@ -254,19 +386,40 @@
       });
     }
 
+    // 全体コピー処理
     function copyAll() {
+      // 1. 日付
       const date = document.getElementById('postDate').value.trim();
-      const eventName = document.getElementById('eventName').value.trim();
-      const location = document.getElementById('location').value.trim();
-      const mainText = document.getElementById('mainText').value.trim();
-      
       let headerText = '';
       if (date) headerText += `📅${date}\n`;
-      if (eventName) headerText += `🎟️${eventName}\n`;
-      if (location) headerText += `🎪${location}\n`;
+
+      // 2. 動的フィールド（プルダウン/自由入力）の値を収集
+      const category = document.getElementById('category').value;
+      const currentData = data[category];
       
+      currentData.fields.forEach(field => {
+        const select = document.getElementById(`select_${field.id}`);
+        const custom = document.getElementById(`custom_${field.id}`);
+        
+        let val = '';
+        if (select.value === '__other__') {
+          val = custom.value.trim();
+        } else {
+          val = select.value;
+        }
+        
+        if (val) {
+          headerText += `${field.icon}${val}\n`;
+        }
+      });
+
+      // 3. 本文
+      const mainText = document.getElementById('mainText').value.trim();
+      
+      // 4. タグ
       const formattedTags = getFormattedTags();
       
+      // 結合
       let finalParts = [];
       if (headerText) finalParts.push(headerText.trim());
       if (mainText) finalParts.push(mainText);
@@ -285,9 +438,15 @@
     function showToast() {
       const toast = document.getElementById("toast");
       toast.className = "show";
+      // アニメーションを再スタートさせるための処理
+      toast.style.animation = 'none';
+      toast.offsetHeight; /* trigger reflow */
+      toast.style.animation = null; 
+      
       setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 3000);
     }
 
+    // 画面読み込み時に初期化
     window.onload = changeCategory;
   </script>
 </body>
