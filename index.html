@@ -95,14 +95,8 @@
     }
 
     /* 追加・編集機能用のスタイル */
-    .add-row {
-      display: flex;
-      gap: 6px;
-      margin-top: 6px;
-    }
-    .add-row input {
-      margin-bottom: 0;
-    }
+    .add-row { display: flex; gap: 6px; margin-top: 6px; }
+    .add-row input { margin-bottom: 0; }
     .btn-small {
       width: auto;
       padding: 8px 12px;
@@ -114,24 +108,13 @@
       cursor: pointer;
       border: none;
     }
-    .btn-outline {
-      background: transparent;
-      border: 1px solid #007aff;
-      color: #007aff;
-      width: 100%;
-      margin-bottom: 10px;
-    }
+    .btn-outline { background: transparent; border: 1px solid #007aff; color: #007aff; width: 100%; margin-bottom: 10px; }
     .btn-outline:active { background: #e5f1ff; }
     .btn-fill { background-color: #007aff; color: #fff; }
     
     .custom-input-wrap { display: none; margin-top: 6px; }
 
-    .hashtag-group {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-bottom: 6px;
-    }
+    .hashtag-group { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 6px; }
     .hashtag-label {
       background: #f2f2f7;
       color: #007aff;
@@ -184,10 +167,12 @@
   <div id="loading">スプレッドシートと通信中...⏳</div>
 
   <div id="appContent">
+    
+    <!-- 階層1: シーン選択 -->
     <div class="card">
-      <label for="category">Scene</label>
+      <label for="sceneSelect">1. Scene (シーン)</label>
       <div class="select-wrapper">
-        <select id="category" onchange="changeCategory()">
+        <select id="sceneSelect" onchange="changeScene()">
           <option value="event">イベント・お祭り</option>
           <option value="zoo_horse">競馬場・動物園</option>
           <option value="live">TV・ラジオ実況</option>
@@ -196,77 +181,86 @@
       </div>
     </div>
 
+    <!-- 階層2: イベント選択 -->
     <div class="card">
-      <label>Details</label>
+      <label for="eventSelect">2. Event (イベント名)</label>
       <div class="dynamic-field">
-        <div class="icon-label">📅 <span>日付</span></div>
-        <input type="text" id="postDate" placeholder="日付">
+        <div class="icon-label">🎟️ <span>イベント・番組・店舗名</span></div>
+        <div class="select-wrapper">
+          <select id="eventSelect" onchange="changeEventSelect()"></select>
+        </div>
+        
+        <!-- イベント追加フォーム (初期非表示) -->
+        <div id="customEventWrap" class="custom-input-wrap add-row">
+          <input type="text" id="newEventInput" placeholder="新しいイベント名を入力">
+          <button class="btn-small btn-fill" onclick="addNewEvent()">登録</button>
+        </div>
       </div>
-      <div id="dynamicFieldsContainer"></div>
     </div>
 
-    <div class="card">
-      <label for="mainText">Message (定型文)</label>
-      <textarea id="mainText" placeholder="投稿の本文をここに入力します"></textarea>
-      <!-- 定型文保存ボタン -->
-      <button class="btn-small btn-outline" onclick="saveText()">💾 現在の文章を定型文として登録</button>
-
-      <label>Hashtags</label>
-      <div id="hashtagContainer" class="hashtag-group"></div>
+    <!-- 階層3: 詳細・本文・タグ -->
+    <div id="detailsArea" style="display: none;">
       
-      <!-- ハッシュタグ追加欄 -->
-      <div class="add-row">
-        <input type="text" id="newTagInput" placeholder="#追加したいタグ">
-        <button class="btn-small btn-fill" onclick="addNewTag()">＋追加</button>
-      </div>
-    </div>
+      <div class="card">
+        <label>3. Details (詳細)</label>
+        
+        <div class="dynamic-field">
+          <div class="icon-label">📅 <span>日付</span></div>
+          <input type="text" id="postDate" placeholder="日付">
+        </div>
 
-    <button class="btn-main" onclick="copyAll()">すべて合体してコピー</button>
-    <button class="btn-sub" onclick="copyTagsOnly()">タグのみコピー (速報用)</button>
-
-    <div id="shortcutArea" class="card">
-      <div class="shortcut-text">✅ コピー完了！次に開くアプリを選択</div>
-      <div class="app-btn-group">
-        <button class="btn-x" onclick="openApp('x')">𝕏 を開く</button>
-        <button class="btn-ig" onclick="openApp('ig')">Instagram</button>
+        <div class="dynamic-field">
+          <div class="icon-label">🎪 <span>場所・詳細など</span></div>
+          <div class="select-wrapper">
+            <select id="locationSelect" onchange="changeLocationSelect()"></select>
+          </div>
+          <!-- 場所追加フォーム -->
+          <div id="customLocationWrap" class="custom-input-wrap add-row">
+            <input type="text" id="newLocationInput" placeholder="新しい場所を入力">
+            <button class="btn-small btn-fill" onclick="addNewLocation()">登録</button>
+          </div>
+        </div>
       </div>
-    </div>
+
+      <div class="card">
+        <label for="mainText">Message (定型文)</label>
+        <textarea id="mainText" placeholder="投稿の本文をここに入力します"></textarea>
+        <button class="btn-small btn-outline" onclick="saveText()">💾 現在の文章をこのイベントの定型文にする</button>
+
+        <label>Hashtags (専用タグ)</label>
+        <div id="hashtagContainer" class="hashtag-group"></div>
+        
+        <div class="add-row">
+          <input type="text" id="newTagInput" placeholder="#追加したいタグ">
+          <button class="btn-small btn-fill" onclick="addNewTag()">＋追加</button>
+        </div>
+      </div>
+
+      <button class="btn-main" onclick="copyAll()">すべて合体してコピー</button>
+      <button class="btn-sub" onclick="copyTagsOnly()">タグのみコピー (速報用)</button>
+
+      <div id="shortcutArea" class="card">
+        <div class="shortcut-text">✅ コピー完了！次に開くアプリを選択</div>
+        <div class="app-btn-group">
+          <button class="btn-x" onclick="openApp('x')">𝕏 を開く</button>
+          <button class="btn-ig" onclick="openApp('ig')">Instagram</button>
+        </div>
+      </div>
+
+    </div> <!-- /detailsArea -->
   </div>
 
   <div id="toast">メッセージ</div>
 
   <script>
-    // 先ほどいただいたGASのURL
-    const GAS_URL = 'https://script.google.com/macros/s/AKfycbztI1mnv89xmOqk_ALZmozYwSQz585uj3LMJrg4DjBnEs9oB6k2XenxqyI5z8Oz2C4T/exec';
+    const GAS_URL = 'https://script.google.com/macros/s/AKfycbzmPoraLijZqrdiE1YxKOpAPotFdnmaa7OxB1iBPGBCtrmu1lLNaRxeyObl8blXGnOP/exec';
     
-    // スプレッドシートのデータを保持する変数
+    // スプレッドシートのデータを保持する変数 (階層構造)
+    // appData["event"]["YOSAKOIソーラン祭り"] = { text: "...", tags: [...], locations: [...] }
     let appData = {};
+    let currentScene = "";
+    let currentEvent = "";
 
-    const autoCheckRules = {
-      'YOSAKOIソーラン祭り': ["#YOSAKOI", "#YOSAKOIソーラン", "#イベント"],
-      'さっぽろ雪まつり': ["#札幌", "#イベント", "#写真"],
-      '帯広競馬場': ["#ばんえい競馬", "#帯広競馬場", "#馬"],
-      'ノーザンホースパーク': ["#ノーザンホースパーク", "#馬", "#写真"]
-    };
-
-    const fieldSettings = {
-      event: [
-        { id: 'eventName', icon: '🎟️', label: 'イベント名' },
-        { id: 'location', icon: '🎪', label: '場所' }
-      ],
-      zoo_horse: [
-        { id: 'location', icon: '🎪', label: '場所' },
-        { id: 'race', icon: '🐴', label: 'レース・競技' }
-      ],
-      live: [
-        { id: 'program', icon: '📺', label: '番組名' }
-      ],
-      food: [
-        { id: 'shop', icon: '🍽️', label: 'お店' }
-      ]
-    };
-
-    // 起動時にデータを取得
     window.onload = function() {
       fetch(GAS_URL)
         .then(response => response.json())
@@ -274,7 +268,7 @@
           appData = data;
           document.getElementById('loading').style.display = 'none';
           document.getElementById('appContent').style.display = 'block';
-          changeCategory();
+          changeScene(); // 初期化
         })
         .catch(error => {
           document.getElementById('loading').innerText = "データの読み込みに失敗しました😢";
@@ -283,19 +277,23 @@
     };
 
     // --- スプレッドシートに保存（送信）する共通関数 ---
-    function saveToServer(categoryId) {
-      showToast("保存中...⏳", 5000); // 保存中は消さない
+    function saveToServer() {
+      if(!currentScene || !currentEvent || currentEvent === "__new__") return;
       
+      showToast("保存中...⏳", 5000); 
+      
+      const targetData = appData[currentScene][currentEvent];
       const payload = {
-        category: categoryId,
-        text: appData[categoryId].text,
-        newTags: appData[categoryId].tags,
-        newOptions: appData[categoryId].options
+        category: currentScene,
+        eventName: currentEvent,
+        text: targetData.text,
+        newTags: targetData.tags,
+        newLocations: targetData.locations
       };
 
       fetch(GAS_URL, {
         method: 'POST',
-        headers: { 'Content-Type': 'text/plain' }, // CORS回避のためtext/plain
+        headers: { 'Content-Type': 'text/plain' },
         body: JSON.stringify(payload)
       })
       .then(res => res.json())
@@ -311,186 +309,218 @@
       });
     }
 
-    // --- 追加・編集機能 ---
 
-    // 1. 定型文の保存
-    function saveText() {
-      const category = document.getElementById('category').value;
-      const newText = document.getElementById('mainText').value;
-      if (!appData[category]) appData[category] = { text: "", tags: [], options: [] };
-      appData[category].text = newText;
-      saveToServer(category);
-    }
+    // --- UIの連動処理 ---
 
-    // 2. ハッシュタグの追加
-    function addNewTag() {
-      const category = document.getElementById('category').value;
-      const input = document.getElementById('newTagInput');
-      let newTag = input.value.trim();
+    // 1. シーン（大枠）が変わった時
+    function changeScene() {
+      currentScene = document.getElementById('sceneSelect').value;
+      const eventSelect = document.getElementById('eventSelect');
+      eventSelect.innerHTML = '';
+
+      // そのシーンに紐づくイベント一覧を取得
+      const events = appData[currentScene] ? Object.keys(appData[currentScene]) : [];
       
-      if (!newTag) return;
-      if (!newTag.startsWith('#')) newTag = '#' + newTag; // #がなければ付ける
+      events.forEach(ev => {
+        const opt = document.createElement('option');
+        opt.value = ev;
+        opt.textContent = ev;
+        eventSelect.appendChild(opt);
+      });
 
-      if (!appData[category]) appData[category] = { text: "", tags: [], options: [] };
-      
-      if (!appData[category].tags.includes(newTag)) {
-        appData[category].tags.push(newTag);
-        renderTags(category); // 画面を更新
-        saveToServer(category); // 保存
+      // 「新しいイベントを追加」という選択肢を一番下に入れる
+      const newOpt = document.createElement('option');
+      newOpt.value = "__new__";
+      newOpt.textContent = "＋ 新しいイベントを追加";
+      eventSelect.appendChild(newOpt);
+
+      if (events.length > 0) {
+        eventSelect.value = events[0];
       } else {
-        showToast("そのタグは既にあります", 2000);
+        eventSelect.value = "__new__";
       }
-      input.value = '';
-    }
-
-    // 3. プルダウン選択肢の追加
-    function addOption(fieldId, category) {
-      const customInput = document.getElementById(`custom_${fieldId}`);
-      const newOpt = customInput.value.trim();
-      if (!newOpt) return;
-
-      if (!appData[category]) appData[category] = { text: "", tags: [], options: [] };
       
-      if (!appData[category].options.includes(newOpt)) {
-        appData[category].options.push(newOpt);
+      changeEventSelect();
+    }
+
+    // 2. イベントプルダウンが変わった時
+    function changeEventSelect() {
+      const eventSelect = document.getElementById('eventSelect');
+      currentEvent = eventSelect.value;
+      
+      const customWrap = document.getElementById('customEventWrap');
+      const detailsArea = document.getElementById('detailsArea');
+
+      document.getElementById('shortcutArea').style.display = 'none';
+
+      if (currentEvent === "__new__") {
+        // 新規追加モード
+        customWrap.style.display = 'flex';
+        detailsArea.style.display = 'none'; // 詳細エリアは隠す
+        document.getElementById('newEventInput').focus();
+      } else {
+        // 既存イベント選択モード
+        customWrap.style.display = 'none';
+        detailsArea.style.display = 'block';
         
-        // 現在のセレクトボックスに選択肢を追加して、それを選ぶ
-        const select = document.getElementById(`select_${fieldId}`);
-        const newOptionEl = document.createElement('option');
-        newOptionEl.value = newOpt;
-        newOptionEl.textContent = newOpt;
-        
-        // 「その他」の直前に挿入する
-        select.insertBefore(newOptionEl, select.lastChild);
-        select.value = newOpt;
-        
-        // 入力欄を隠す
-        document.getElementById(`custom_wrap_${fieldId}`).style.display = 'none';
-        
-        saveToServer(category);
+        // 詳細エリアの中身を更新
+        updateDetailsArea();
       }
     }
 
+    // 3. イベント追加ボタンを押した時
+    function addNewEvent() {
+      const input = document.getElementById('newEventInput');
+      const newEventName = input.value.trim();
+      
+      if (!newEventName) return;
 
-    // --- 描画・更新機能 ---
-
-    function getTodayDate() {
-      const today = new Date();
-      return `${today.getFullYear()}.${today.getMonth() + 1}.${today.getDate()}`;
+      if (!appData[currentScene]) appData[currentScene] = {};
+      
+      if (!appData[currentScene][newEventName]) {
+        // 空のデータを作成
+        appData[currentScene][newEventName] = { text: "", tags: [], locations: [] };
+        
+        // プルダウンを再構築して、新しく作ったイベントを選択状態にする
+        const eventSelect = document.getElementById('eventSelect');
+        const newOpt = document.createElement('option');
+        newOpt.value = newEventName;
+        newOpt.textContent = newEventName;
+        eventSelect.insertBefore(newOpt, eventSelect.lastChild); // 「＋追加」の直前に入れる
+        
+        eventSelect.value = newEventName;
+        input.value = "";
+        
+        changeEventSelect(); // 詳細エリアを表示
+        saveToServer();      // 保存
+      } else {
+        showToast("そのイベントは既に存在します", 2000);
+      }
     }
 
-    // タグ部分だけを再描画する関数
-    function renderTags(category) {
-      const currentData = appData[category] || { text: "", tags: [], options: [] };
+    // --- 詳細エリアの更新 ---
+    function updateDetailsArea() {
+      document.getElementById('postDate').value = getTodayDate();
+      
+      const data = appData[currentScene][currentEvent];
+      
+      // 定型文
+      document.getElementById('mainText').value = data.text;
+      
+      // 場所プルダウン
+      const locationSelect = document.getElementById('locationSelect');
+      locationSelect.innerHTML = '';
+      
+      const defaultOpt = document.createElement('option');
+      defaultOpt.value = "";
+      defaultOpt.textContent = "選択してください";
+      locationSelect.appendChild(defaultOpt);
+
+      data.locations.forEach(loc => {
+        const opt = document.createElement('option');
+        opt.value = loc;
+        opt.textContent = loc;
+        locationSelect.appendChild(opt);
+      });
+      
+      const otherOpt = document.createElement('option');
+      otherOpt.value = "__other__";
+      otherOpt.textContent = "＋ 新しい場所を追加";
+      locationSelect.appendChild(otherOpt);
+      
+      document.getElementById('customLocationWrap').style.display = 'none';
+
+      // ハッシュタグ
+      renderTags();
+    }
+
+    // 場所プルダウンが変わった時
+    function changeLocationSelect() {
+      const val = document.getElementById('locationSelect').value;
+      const wrap = document.getElementById('customLocationWrap');
+      if (val === "__other__") {
+        wrap.style.display = 'flex';
+        document.getElementById('newLocationInput').focus();
+      } else {
+        wrap.style.display = 'none';
+      }
+    }
+
+    // 場所追加ボタン
+    function addNewLocation() {
+      const input = document.getElementById('newLocationInput');
+      const newLoc = input.value.trim();
+      if (!newLoc) return;
+
+      const data = appData[currentScene][currentEvent];
+      if (!data.locations.includes(newLoc)) {
+        data.locations.push(newLoc);
+        
+        const locationSelect = document.getElementById('locationSelect');
+        const opt = document.createElement('option');
+        opt.value = newLoc;
+        opt.textContent = newLoc;
+        locationSelect.insertBefore(opt, locationSelect.lastChild);
+        
+        locationSelect.value = newLoc;
+        input.value = "";
+        document.getElementById('customLocationWrap').style.display = 'none';
+        
+        saveToServer();
+      }
+    }
+
+    // 定型文保存
+    function saveText() {
+      const newText = document.getElementById('mainText').value;
+      appData[currentScene][currentEvent].text = newText;
+      saveToServer();
+    }
+
+    // タグ描画
+    function renderTags() {
+      const tags = appData[currentScene][currentEvent].tags;
       const tagContainer = document.getElementById('hashtagContainer');
       tagContainer.innerHTML = '';
-      currentData.tags.forEach(tag => {
+      tags.forEach(tag => {
         const label = document.createElement('label');
         label.className = 'hashtag-label';
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
         checkbox.name = 'hashtags';
         checkbox.value = tag;
-        checkbox.checked = false;
+        checkbox.checked = false; // 初期値オフ
         label.appendChild(checkbox);
         label.appendChild(document.createTextNode(tag));
         tagContainer.appendChild(label);
       });
     }
 
-    function changeCategory() {
-      document.getElementById('shortcutArea').style.display = 'none';
+    // タグ追加
+    function addNewTag() {
+      const input = document.getElementById('newTagInput');
+      let newTag = input.value.trim();
+      if (!newTag) return;
+      if (!newTag.startsWith('#')) newTag = '#' + newTag;
 
-      const category = document.getElementById('category').value;
-      const currentData = appData[category] || { text: "", tags: [], options: [] };
-      const currentSettings = fieldSettings[category] || [];
-      
-      document.getElementById('postDate').value = getTodayDate();
-      document.getElementById('mainText').value = currentData.text;
-      
-      renderTags(category); // タグの描画
-
-      const fieldsContainer = document.getElementById('dynamicFieldsContainer');
-      fieldsContainer.innerHTML = '';
-
-      currentSettings.forEach((field) => {
-        const fieldDiv = document.createElement('div');
-        fieldDiv.className = 'dynamic-field';
-        
-        const labelDiv = document.createElement('div');
-        labelDiv.className = 'icon-label';
-        labelDiv.innerHTML = `${field.icon} <span>${field.label}</span>`;
-        fieldDiv.appendChild(labelDiv);
-
-        const selectWrapper = document.createElement('div');
-        selectWrapper.className = 'select-wrapper';
-
-        const select = document.createElement('select');
-        select.id = `select_${field.id}`;
-        
-        const defaultOption = document.createElement('option');
-        defaultOption.value = "";
-        defaultOption.textContent = "選択してください";
-        select.appendChild(defaultOption);
-
-        currentData.options.forEach(opt => {
-          const option = document.createElement('option');
-          option.value = opt;
-          option.textContent = opt;
-          select.appendChild(option);
-        });
-        
-        const otherOption = document.createElement('option');
-        otherOption.value = "__other__";
-        otherOption.textContent = "その他（自由入力）";
-        select.appendChild(otherOption);
-
-        selectWrapper.appendChild(select);
-        fieldDiv.appendChild(selectWrapper);
-
-        // 自由入力＆登録ボタンのエリア
-        const customWrap = document.createElement('div');
-        customWrap.id = `custom_wrap_${field.id}`;
-        customWrap.className = 'custom-input-wrap';
-        customWrap.className = 'add-row';
-        customWrap.style.display = 'none'; // 初期非表示
-
-        const customInput = document.createElement('input');
-        customInput.type = 'text';
-        customInput.id = `custom_${field.id}`;
-        customInput.placeholder = `${field.label}を入力`;
-
-        const addOptBtn = document.createElement('button');
-        addOptBtn.className = 'btn-small btn-fill';
-        addOptBtn.textContent = '登録';
-        addOptBtn.onclick = () => addOption(field.id, category);
-
-        customWrap.appendChild(customInput);
-        customWrap.appendChild(addOptBtn);
-        fieldDiv.appendChild(customWrap);
-
-        select.addEventListener('change', function() {
-          if (this.value === '__other__') {
-            customWrap.style.display = 'flex';
-            customInput.focus();
-          } else {
-            customWrap.style.display = 'none';
-          }
-
-          const selectedValue = this.value;
-          if (autoCheckRules[selectedValue]) {
-            const targetTags = autoCheckRules[selectedValue];
-            const checkboxes = document.querySelectorAll('input[name="hashtags"]');
-            checkboxes.forEach(cb => {
-              if (targetTags.includes(cb.value)) cb.checked = true;
-            });
-          }
-        });
-
-        fieldsContainer.appendChild(fieldDiv);
-      });
+      const data = appData[currentScene][currentEvent];
+      if (!data.tags.includes(newTag)) {
+        data.tags.push(newTag);
+        renderTags();
+        saveToServer();
+      } else {
+        showToast("そのタグは既にあります", 2000);
+      }
+      input.value = '';
     }
 
+    // --- コピー機能周り ---
+    function getTodayDate() {
+      const today = new Date();
+      return `${today.getFullYear()}.${today.getMonth() + 1}.${today.getDate()}`;
+    }
+
+    // ハッシュタグを2行に分割する処理（複数ある場合）
     function getFormattedTags() {
       const checkboxes = document.querySelectorAll('input[name="hashtags"]:checked');
       const tags = Array.from(checkboxes).map(cb => cb.value);
@@ -514,33 +544,27 @@
     }
 
     function copyAll() {
-      const date = document.getElementById('postDate').value.trim();
+      let finalParts = [];
       let headerText = '';
-      if (date) headerText += `📅${date}\n`;
-
-      const category = document.getElementById('category').value;
-      const currentSettings = fieldSettings[category] || [];
       
-      currentSettings.forEach(field => {
-        const select = document.getElementById(`select_${field.id}`);
-        const custom = document.getElementById(`custom_${field.id}`);
-        
-        let val = '';
-        if (select.value === '__other__') {
-          val = custom.value.trim();
-        } else if (select.value !== "") {
-          val = select.value;
-        }
-        
-        if (val) headerText += `${field.icon}${val}\n`;
-      });
+      const date = document.getElementById('postDate').value.trim();
+      if (date) headerText += `📅${date}\n`;
+      
+      // イベント名
+      headerText += `🎟️${currentEvent}\n`;
+
+      // 場所
+      const locSelect = document.getElementById('locationSelect');
+      if (locSelect.value && locSelect.value !== "__other__") {
+        headerText += `🎪${locSelect.value}\n`;
+      }
+      
+      if (headerText) finalParts.push(headerText.trim());
 
       const mainText = document.getElementById('mainText').value.trim();
-      const formattedTags = getFormattedTags();
-      
-      let finalParts = [];
-      if (headerText) finalParts.push(headerText.trim());
       if (mainText) finalParts.push(mainText);
+
+      const formattedTags = getFormattedTags();
       if (formattedTags) finalParts.push(formattedTags);
 
       copyToClipboard(finalParts.join('\n\n'));
