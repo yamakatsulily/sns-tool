@@ -5,33 +5,34 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SNS投稿アシスト</title>
   <style>
-    /* モダン＆シンプルなデザイン (iOS風) */
+    /* コンパクトなiOS風デザイン */
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       background-color: #f2f2f7;
       color: #1c1c1e;
-      padding: 16px;
+      padding: 10px; /* 余白を縮小 */
       margin: 0;
+      font-size: 14px; /* 基本の文字サイズを少し小さく */
     }
     h1 {
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       text-align: center;
-      margin-bottom: 20px;
+      margin-bottom: 12px; /* 余白を縮小 */
       color: #007aff;
       font-weight: 600;
     }
     .card {
       background: #ffffff;
-      border-radius: 14px;
-      padding: 16px;
-      box-shadow: 0 1px 5px rgba(0,0,0,0.05);
-      margin-bottom: 16px;
+      border-radius: 12px; /* 丸みを少し小さく */
+      padding: 12px; /* 余白を縮小 */
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      margin-bottom: 10px; /* カード間の余白を縮小 */
     }
     label {
       font-weight: 600;
       display: block;
-      margin-bottom: 6px;
-      font-size: 0.85rem;
+      margin-bottom: 4px;
+      font-size: 0.8rem;
       color: #8e8e93;
       text-transform: uppercase;
       letter-spacing: 0.5px;
@@ -39,15 +40,14 @@
     
     select, input[type="text"], textarea {
       width: 100%;
-      padding: 12px;
+      padding: 8px 10px; /* 入力欄の高さを縮小 */
       background-color: #f2f2f7;
       border: 1px solid transparent;
-      border-radius: 10px;
-      font-size: 1rem;
+      border-radius: 8px;
+      font-size: 0.95rem;
       box-sizing: border-box;
-      margin-bottom: 16px;
+      margin-bottom: 10px;
       color: #1c1c1e;
-      transition: border-color 0.2s, background-color 0.2s;
       appearance: none;
     }
     select:focus, input[type="text"]:focus, textarea:focus {
@@ -59,23 +59,23 @@
     .select-wrapper { position: relative; }
     .select-wrapper::after {
       content: "▼";
-      font-size: 0.8rem;
+      font-size: 0.7rem;
       color: #8e8e93;
       position: absolute;
-      right: 14px;
-      top: 14px;
+      right: 10px;
+      top: 10px; /* 矢印の位置を調整 */
       pointer-events: none;
     }
 
     textarea {
       resize: vertical;
-      min-height: 100px;
-      line-height: 1.5;
+      min-height: 70px; /* テキストエリアの高さを縮小 */
+      line-height: 1.4;
     }
 
     .dynamic-field {
-      margin-bottom: 12px;
-      padding-bottom: 12px;
+      margin-bottom: 8px;
+      padding-bottom: 8px;
       border-bottom: 1px solid #e5e5ea;
     }
     .dynamic-field:last-child {
@@ -88,83 +88,78 @@
       align-items: center;
       gap: 6px;
       font-weight: 600;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
       color: #333;
+      font-size: 0.9rem;
     }
-    .custom-input { display: none; margin-top: 8px; }
+    .custom-input { display: none; margin-top: 6px; }
 
     .hashtag-group {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 8px;
+      gap: 6px; /* タグの隙間を縮小 */
+      margin-bottom: 6px;
     }
     .hashtag-label {
       background: #f2f2f7;
       color: #007aff;
-      padding: 8px 14px;
-      border-radius: 20px;
-      font-size: 0.9rem;
+      padding: 6px 10px; /* タグの大きさを縮小 */
+      border-radius: 16px;
+      font-size: 0.85rem;
       font-weight: 500;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 4px;
       cursor: pointer;
-      transition: background-color 0.2s;
     }
-    .hashtag-label:hover { background: #e5e5ea; }
-    .hashtag-label input { margin: 0; width: 16px; height: 16px; accent-color: #007aff; }
+    .hashtag-label input { margin: 0; width: 14px; height: 14px; accent-color: #007aff; }
 
     button {
       width: 100%;
-      padding: 16px;
+      padding: 12px; /* ボタンの高さを縮小 */
       border: none;
-      border-radius: 12px;
-      font-size: 1rem;
+      border-radius: 10px;
+      font-size: 0.95rem;
       font-weight: 600;
       cursor: pointer;
-      margin-bottom: 12px;
-      transition: opacity 0.2s;
+      margin-bottom: 8px;
     }
-    button:active { opacity: 0.8; }
-    .btn-main { background-color: #007aff; color: #ffffff; box-shadow: 0 4px 10px rgba(0, 122, 255, 0.3); }
-    .btn-sub { background-color: #34c759; color: #ffffff; box-shadow: 0 4px 10px rgba(52, 199, 89, 0.3); }
+    .btn-main { background-color: #007aff; color: #ffffff; }
+    .btn-sub { background-color: #34c759; color: #ffffff; }
 
-    /* アプリ連携ボタン用エリア（初期非表示） */
+    /* アプリ連携ボタン用エリア */
     #shortcutArea {
-      display: none; /* 最初は隠しておく */
+      display: none;
       animation: fadein 0.5s;
     }
     .shortcut-text {
       text-align: center;
       font-weight: bold;
       color: #333;
-      margin-bottom: 12px;
-      font-size: 0.9rem;
+      margin-bottom: 8px;
+      font-size: 0.85rem;
     }
     .app-btn-group {
       display: flex;
-      gap: 12px;
+      gap: 8px;
     }
     .btn-x { background-color: #000000; color: #ffffff; margin-bottom: 0; }
     .btn-ig { background-color: #E1306C; color: #ffffff; margin-bottom: 0; }
 
     #toast {
       visibility: hidden;
-      min-width: 200px;
+      min-width: 180px;
       background-color: rgba(28, 28, 30, 0.9);
       color: #fff;
       text-align: center;
-      border-radius: 20px;
-      padding: 12px 20px;
+      border-radius: 16px;
+      padding: 10px 16px;
       position: fixed;
       z-index: 100;
       left: 50%;
-      bottom: 40px;
+      bottom: 20px;
       transform: translateX(-50%);
-      font-size: 0.9rem;
-      font-weight: 500;
-      backdrop-filter: blur(5px);
+      font-size: 0.85rem;
     }
     #toast.show {
       visibility: visible;
@@ -172,99 +167,116 @@
     }
     @keyframes fadein { from {opacity: 0; transform: translateY(10px);} to {opacity: 1; transform: translateY(0);} }
     @keyframes fadeout { from {opacity: 1;} to {opacity: 0; visibility: hidden;} }
+
+    /* ローディング表示用 */
+    #loading {
+      text-align: center;
+      padding: 20px;
+      font-weight: bold;
+      color: #007aff;
+    }
+    #appContent {
+      display: none; /* データが読み込めるまで隠す */
+    }
   </style>
 </head>
 <body>
 
   <h1>SNS投稿アシスト</h1>
 
-  <div class="card">
-    <label for="category">Scene</label>
-    <div class="select-wrapper">
-      <select id="category" onchange="changeCategory()">
-        <option value="event">イベント・お祭り</option>
-        <option value="zoo_horse">競馬場・動物園</option>
-        <option value="live">TV・ラジオ実況</option>
-        <option value="food">飲食店</option>
-      </select>
+  <div id="loading">データを読み込み中...⏳</div>
+
+  <div id="appContent">
+    <div class="card">
+      <label for="category">Scene</label>
+      <div class="select-wrapper">
+        <select id="category" onchange="changeCategory()">
+          <option value="event">イベント・お祭り</option>
+          <option value="zoo_horse">競馬場・動物園</option>
+          <option value="live">TV・ラジオ実況</option>
+          <option value="food">飲食店</option>
+        </select>
+      </div>
     </div>
-  </div>
 
-  <div class="card">
-    <label>Details</label>
-    <div class="dynamic-field">
-      <div class="icon-label">📅 <span>日付</span></div>
-      <input type="text" id="postDate" placeholder="日付">
+    <div class="card">
+      <label>Details</label>
+      <div class="dynamic-field">
+        <div class="icon-label">📅 <span>日付</span></div>
+        <input type="text" id="postDate" placeholder="日付">
+      </div>
+      <div id="dynamicFieldsContainer"></div>
     </div>
-    <div id="dynamicFieldsContainer"></div>
-  </div>
 
-  <div class="card">
-    <label for="mainText">Message</label>
-    <textarea id="mainText" placeholder="投稿の本文をここに入力します"></textarea>
+    <div class="card">
+      <label for="mainText">Message</label>
+      <textarea id="mainText" placeholder="投稿の本文をここに入力します"></textarea>
 
-    <label>Hashtags</label>
-    <div id="hashtagContainer" class="hashtag-group"></div>
-  </div>
+      <label>Hashtags</label>
+      <div id="hashtagContainer" class="hashtag-group"></div>
+    </div>
 
-  <button class="btn-main" onclick="copyAll()">すべて合体してコピー</button>
-  <button class="btn-sub" onclick="copyTagsOnly()">タグのみコピー (速報用)</button>
+    <button class="btn-main" onclick="copyAll()">すべて合体してコピー</button>
+    <button class="btn-sub" onclick="copyTagsOnly()">タグのみコピー (速報用)</button>
 
-  <!-- コピー後に表示されるアプリ連携エリア -->
-  <div id="shortcutArea" class="card">
-    <div class="shortcut-text">✅ コピー完了！次に開くアプリを選択</div>
-    <div class="app-btn-group">
-      <button class="btn-x" onclick="openApp('x')">𝕏 を開く</button>
-      <button class="btn-ig" onclick="openApp('ig')">Instagram</button>
+    <div id="shortcutArea" class="card">
+      <div class="shortcut-text">✅ コピー完了！次に開くアプリを選択</div>
+      <div class="app-btn-group">
+        <button class="btn-x" onclick="openApp('x')">𝕏 を開く</button>
+        <button class="btn-ig" onclick="openApp('ig')">Instagram</button>
+      </div>
     </div>
   </div>
 
   <div id="toast">コピーしました！</div>
 
   <script>
-    // --- データの定義 ---
-    const data = {
-      event: {
-        fields: [
-          { id: 'eventName', icon: '🎟️', label: 'イベント名', options: ['YOSAKOIソーラン祭り', 'さっぽろ雪まつり', 'ライラックまつり'] },
-          { id: 'location', icon: '🎪', label: '場所', options: ['大通公園', '札幌ドーム', '札幌駅前'] }
-        ],
-        text: "チームの演舞、最高でした！\n",
-        tags: ["#YOSAKOI", "#YOSAKOIソーラン", "#札幌", "#イベント", "#写真"],
-        // 【追加】連動チェックルール：この単語を選んだら、右側のタグを自動でONにする
-        autoCheck: {
-          'YOSAKOIソーラン祭り': ["#YOSAKOI", "#YOSAKOIソーラン", "#イベント"],
-          'さっぽろ雪まつり': ["#札幌", "#イベント", "#写真"]
-        }
-      },
-      zoo_horse: {
-        fields: [
-          { id: 'location', icon: '🎪', label: '場所', options: ['帯広競馬場', 'ノーザンホースパーク', '札幌市円山動物園'] },
-          { id: 'race', icon: '🐴', label: 'レース・競技', options: ['第1レース', 'メインレース', '中障害A飛越競技（予選）'] }
-        ],
-        text: "現地に到着しました！\n",
-        tags: ["#ばんえい競馬", "#帯広競馬場", "#ノーザンホースパーク", "#馬", "#写真"],
-        autoCheck: {
-          '帯広競馬場': ["#ばんえい競馬", "#帯広競馬場", "#馬"],
-          'ノーザンホースパーク': ["#ノーザンホースパーク", "#馬", "#写真"]
-        }
-      },
-      live: {
-        fields: [
-          { id: 'program', icon: '📺', label: '番組名', options: ['（お気に入りの番組名1）'] }
-        ],
-        text: "実況中！\n",
-        tags: ["#実況", "#TV", "#ラジオ", "#オンエア"],
-        autoCheck: {}
-      },
-      food: {
-        fields: [
-          { id: 'shop', icon: '🍽️', label: 'お店', options: ['（お気に入りカフェ）'] }
-        ],
-        text: "いただきます！\n",
-        tags: ["#札幌グルメ", "#ランチ", "#カフェ", "#美味しい"],
-        autoCheck: {}
-      }
+    // ★ここに先ほど発行したGASのURLをセットします！
+    const GAS_URL = 'https://script.google.com/macros/s/AKfycbyZa1dUXgry-97uTf4Fxq-VdYg6ws9QjyleklLvUG9-mj3y_2rlYadrqgYqvoj-b4iu/exec';
+    
+    // スプレッドシートから読み込んだデータを保存する変数
+    let appData = {};
+
+    // ★イベント連動チェックルールの定義（ここはHTML側に持たせます）
+    const autoCheckRules = {
+      'YOSAKOIソーラン祭り': ["#YOSAKOI", "#YOSAKOIソーラン", "#イベント"],
+      'さっぽろ雪まつり': ["#札幌", "#イベント", "#写真"],
+      '帯広競馬場': ["#ばんえい競馬", "#帯広競馬場", "#馬"],
+      'ノーザンホースパーク': ["#ノーザンホースパーク", "#馬", "#写真"]
+    };
+
+    // アイコンとラベルの設定
+    const fieldSettings = {
+      event: [
+        { id: 'eventName', icon: '🎟️', label: 'イベント名' },
+        { id: 'location', icon: '🎪', label: '場所' }
+      ],
+      zoo_horse: [
+        { id: 'location', icon: '🎪', label: '場所' },
+        { id: 'race', icon: '🐴', label: 'レース・競技' }
+      ],
+      live: [
+        { id: 'program', icon: '📺', label: '番組名' }
+      ],
+      food: [
+        { id: 'shop', icon: '🍽️', label: 'お店' }
+      ]
+    };
+
+    // 起動時にデータを取得する
+    window.onload = function() {
+      fetch(GAS_URL)
+        .then(response => response.json())
+        .then(data => {
+          appData = data;
+          document.getElementById('loading').style.display = 'none';
+          document.getElementById('appContent').style.display = 'block';
+          changeCategory();
+        })
+        .catch(error => {
+          document.getElementById('loading').innerText = "データの読み込みに失敗しました😢";
+          console.error('Error fetching data:', error);
+        });
     };
 
     function getTodayDate() {
@@ -273,16 +285,15 @@
     }
 
     function changeCategory() {
-      // 切り替え時はショートカットを隠す
       document.getElementById('shortcutArea').style.display = 'none';
 
       const category = document.getElementById('category').value;
-      const currentData = data[category];
+      const currentData = appData[category] || { text: "", tags: [], options: [] };
+      const currentSettings = fieldSettings[category] || [];
       
       document.getElementById('postDate').value = getTodayDate();
       document.getElementById('mainText').value = currentData.text;
       
-      // ハッシュタグの生成 (初期値はすべて false/チェックなし)
       const tagContainer = document.getElementById('hashtagContainer');
       tagContainer.innerHTML = '';
       currentData.tags.forEach(tag => {
@@ -292,17 +303,16 @@
         checkbox.type = 'checkbox';
         checkbox.name = 'hashtags';
         checkbox.value = tag;
-        checkbox.checked = false; // ★初期値は外す
+        checkbox.checked = false; // 初期値はオフ
         label.appendChild(checkbox);
         label.appendChild(document.createTextNode(tag));
         tagContainer.appendChild(label);
       });
 
-      // 動的フィールド（プルダウン）の生成
       const fieldsContainer = document.getElementById('dynamicFieldsContainer');
       fieldsContainer.innerHTML = '';
 
-      currentData.fields.forEach(field => {
+      currentSettings.forEach((field, index) => {
         const fieldDiv = document.createElement('div');
         fieldDiv.className = 'dynamic-field';
         
@@ -317,13 +327,14 @@
         const select = document.createElement('select');
         select.id = `select_${field.id}`;
         
-        // 「選択してください」という初期の空の選択肢を追加
         const defaultOption = document.createElement('option');
         defaultOption.value = "";
         defaultOption.textContent = "選択してください";
         select.appendChild(defaultOption);
 
-        field.options.forEach(opt => {
+        // スプレッドシートの「オプション設定」から選択肢を生成
+        // （簡易的に、1つのプルダウンにつき全選択肢を入れる仕様にしています）
+        currentData.options.forEach(opt => {
           const option = document.createElement('option');
           option.value = opt;
           option.textContent = opt;
@@ -342,12 +353,10 @@
         customInput.type = 'text';
         customInput.id = `custom_${field.id}`;
         customInput.className = 'custom-input';
-        customInput.placeholder = `${field.label}を入力してください`;
+        customInput.placeholder = `${field.label}を入力`;
         fieldDiv.appendChild(customInput);
 
-        // プルダウン変更時のイベント（自由入力の表示 ＋ 連動ハッシュタグ）
         select.addEventListener('change', function() {
-          // 自由入力の切り替え
           if (this.value === '__other__') {
             customInput.style.display = 'block';
             customInput.focus();
@@ -355,15 +364,13 @@
             customInput.style.display = 'none';
           }
 
-          // 連動ハッシュタグの処理
           const selectedValue = this.value;
-          const autoCheckRules = currentData.autoCheck;
-          if (autoCheckRules && autoCheckRules[selectedValue]) {
+          if (autoCheckRules[selectedValue]) {
             const targetTags = autoCheckRules[selectedValue];
             const checkboxes = document.querySelectorAll('input[name="hashtags"]');
             checkboxes.forEach(cb => {
               if (targetTags.includes(cb.value)) {
-                cb.checked = true; // 関連タグをオンにする
+                cb.checked = true;
               }
             });
           }
@@ -373,7 +380,6 @@
       });
     }
 
-    // ハッシュタグのフォーマット（複数ある場合は2行に分ける処理は維持）
     function getFormattedTags() {
       const checkboxes = document.querySelectorAll('input[name="hashtags"]:checked');
       const tags = Array.from(checkboxes).map(cb => cb.value);
@@ -390,7 +396,6 @@
     function copyToClipboard(text) {
       navigator.clipboard.writeText(text).then(() => {
         showToast();
-        // ★コピー成功時にショートカットエリアを表示する
         document.getElementById('shortcutArea').style.display = 'block';
       }).catch(err => {
         alert('コピーに失敗しました。');
@@ -403,9 +408,9 @@
       if (date) headerText += `📅${date}\n`;
 
       const category = document.getElementById('category').value;
-      const currentData = data[category];
+      const currentSettings = fieldSettings[category] || [];
       
-      currentData.fields.forEach(field => {
+      currentSettings.forEach(field => {
         const select = document.getElementById(`select_${field.id}`);
         const custom = document.getElementById(`custom_${field.id}`);
         
@@ -447,18 +452,13 @@
       setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 3000);
     }
 
-    // アプリを開く機能
     function openApp(app) {
       if (app === 'x') {
-        // Xの投稿画面（Web版）またはアプリが開きます
         window.open('https://twitter.com/intent/tweet', '_blank');
       } else if (app === 'ig') {
-        // Instagramを開きます
         window.open('https://www.instagram.com/', '_blank');
       }
     }
-
-    window.onload = changeCategory;
   </script>
 </body>
 </html>
