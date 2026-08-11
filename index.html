@@ -8,7 +8,7 @@
     /* モダン＆シンプルなデザイン (iOS風) */
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background-color: #f2f2f7; /* iOSのシステム背景色に近いグレー */
+      background-color: #f2f2f7;
       color: #1c1c1e;
       padding: 16px;
       margin: 0;
@@ -17,7 +17,7 @@
       font-size: 1.2rem;
       text-align: center;
       margin-bottom: 20px;
-      color: #007aff; /* iOSのブルー */
+      color: #007aff;
       font-weight: 600;
     }
     .card {
@@ -32,12 +32,11 @@
       display: block;
       margin-bottom: 6px;
       font-size: 0.85rem;
-      color: #8e8e93; /* サブテキスト色 */
+      color: #8e8e93;
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
     
-    /* フォーム要素の共通スタイル */
     select, input[type="text"], textarea {
       width: 100%;
       padding: 12px;
@@ -49,7 +48,7 @@
       margin-bottom: 16px;
       color: #1c1c1e;
       transition: border-color 0.2s, background-color 0.2s;
-      appearance: none; /* デフォルトの矢印などを消す */
+      appearance: none;
     }
     select:focus, input[type="text"]:focus, textarea:focus {
       outline: none;
@@ -57,10 +56,7 @@
       background-color: #ffffff;
     }
     
-    /* セレクトボックスにカスタム矢印を追加 */
-    .select-wrapper {
-      position: relative;
-    }
+    .select-wrapper { position: relative; }
     .select-wrapper::after {
       content: "▼";
       font-size: 0.8rem;
@@ -77,7 +73,6 @@
       line-height: 1.5;
     }
 
-    /* 動的入力フィールド用 */
     .dynamic-field {
       margin-bottom: 12px;
       padding-bottom: 12px;
@@ -96,13 +91,8 @@
       margin-bottom: 8px;
       color: #333;
     }
-    /* 自由入力用テキストボックス（初期非表示） */
-    .custom-input {
-      display: none; 
-      margin-top: 8px;
-    }
+    .custom-input { display: none; margin-top: 8px; }
 
-    /* ハッシュタグ */
     .hashtag-group {
       display: flex;
       flex-wrap: wrap;
@@ -122,17 +112,9 @@
       cursor: pointer;
       transition: background-color 0.2s;
     }
-    .hashtag-label:hover {
-      background: #e5e5ea;
-    }
-    .hashtag-label input {
-      margin: 0;
-      width: 16px;
-      height: 16px;
-      accent-color: #007aff; /* チェックボックスの色 */
-    }
+    .hashtag-label:hover { background: #e5e5ea; }
+    .hashtag-label input { margin: 0; width: 16px; height: 16px; accent-color: #007aff; }
 
-    /* ボタン */
     button {
       width: 100%;
       padding: 16px;
@@ -144,21 +126,29 @@
       margin-bottom: 12px;
       transition: opacity 0.2s;
     }
-    button:active {
-      opacity: 0.8;
-    }
-    .btn-main { 
-      background-color: #007aff; 
-      color: #ffffff; 
-      box-shadow: 0 4px 10px rgba(0, 122, 255, 0.3);
-    }
-    .btn-sub { 
-      background-color: #34c759; /* iOSのグリーン */
-      color: #ffffff; 
-      box-shadow: 0 4px 10px rgba(52, 199, 89, 0.3);
-    }
+    button:active { opacity: 0.8; }
+    .btn-main { background-color: #007aff; color: #ffffff; box-shadow: 0 4px 10px rgba(0, 122, 255, 0.3); }
+    .btn-sub { background-color: #34c759; color: #ffffff; box-shadow: 0 4px 10px rgba(52, 199, 89, 0.3); }
 
-    /* トースト通知 */
+    /* アプリ連携ボタン用エリア（初期非表示） */
+    #shortcutArea {
+      display: none; /* 最初は隠しておく */
+      animation: fadein 0.5s;
+    }
+    .shortcut-text {
+      text-align: center;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 12px;
+      font-size: 0.9rem;
+    }
+    .app-btn-group {
+      display: flex;
+      gap: 12px;
+    }
+    .btn-x { background-color: #000000; color: #ffffff; margin-bottom: 0; }
+    .btn-ig { background-color: #E1306C; color: #ffffff; margin-bottom: 0; }
+
     #toast {
       visibility: hidden;
       min-width: 200px;
@@ -180,14 +170,8 @@
       visibility: visible;
       animation: fadein 0.3s, fadeout 0.4s 2.5s forwards;
     }
-    @keyframes fadein {
-      from {bottom: 20px; opacity: 0;}
-      to {bottom: 40px; opacity: 1;}
-    }
-    @keyframes fadeout {
-      from {bottom: 40px; opacity: 1;}
-      to {bottom: 20px; opacity: 0; visibility: hidden;}
-    }
+    @keyframes fadein { from {opacity: 0; transform: translateY(10px);} to {opacity: 1; transform: translateY(0);} }
+    @keyframes fadeout { from {opacity: 1;} to {opacity: 0; visibility: hidden;} }
   </style>
 </head>
 <body>
@@ -208,14 +192,10 @@
 
   <div class="card">
     <label>Details</label>
-    
-    <!-- 日付は固定で表示 -->
     <div class="dynamic-field">
       <div class="icon-label">📅 <span>日付</span></div>
       <input type="text" id="postDate" placeholder="日付">
     </div>
-
-    <!-- ここに動的にプルダウンが生成されます -->
     <div id="dynamicFieldsContainer"></div>
   </div>
 
@@ -224,19 +204,25 @@
     <textarea id="mainText" placeholder="投稿の本文をここに入力します"></textarea>
 
     <label>Hashtags</label>
-    <div id="hashtagContainer" class="hashtag-group">
-      <!-- JSで自動生成されます -->
-    </div>
+    <div id="hashtagContainer" class="hashtag-group"></div>
   </div>
 
   <button class="btn-main" onclick="copyAll()">すべて合体してコピー</button>
   <button class="btn-sub" onclick="copyTagsOnly()">タグのみコピー (速報用)</button>
 
+  <!-- コピー後に表示されるアプリ連携エリア -->
+  <div id="shortcutArea" class="card">
+    <div class="shortcut-text">✅ コピー完了！次に開くアプリを選択</div>
+    <div class="app-btn-group">
+      <button class="btn-x" onclick="openApp('x')">𝕏 を開く</button>
+      <button class="btn-ig" onclick="openApp('ig')">Instagram</button>
+    </div>
+  </div>
+
   <div id="toast">コピーしました！</div>
 
   <script>
     // --- データの定義 ---
-    // 各カテゴリーごとに、必要な項目（プルダウンの選択肢）を定義します
     const data = {
       event: {
         fields: [
@@ -244,7 +230,12 @@
           { id: 'location', icon: '🎪', label: '場所', options: ['大通公園', '札幌ドーム', '札幌駅前'] }
         ],
         text: "チームの演舞、最高でした！\n",
-        tags: ["#YOSAKOI", "#YOSAKOIソーラン", "#札幌", "#イベント", "#写真"]
+        tags: ["#YOSAKOI", "#YOSAKOIソーラン", "#札幌", "#イベント", "#写真"],
+        // 【追加】連動チェックルール：この単語を選んだら、右側のタグを自動でONにする
+        autoCheck: {
+          'YOSAKOIソーラン祭り': ["#YOSAKOI", "#YOSAKOIソーラン", "#イベント"],
+          'さっぽろ雪まつり': ["#札幌", "#イベント", "#写真"]
+        }
       },
       zoo_horse: {
         fields: [
@@ -252,21 +243,27 @@
           { id: 'race', icon: '🐴', label: 'レース・競技', options: ['第1レース', 'メインレース', '中障害A飛越競技（予選）'] }
         ],
         text: "現地に到着しました！\n",
-        tags: ["#ばんえい競馬", "#帯広競馬場", "#ノーザンホースパーク", "#馬", "#写真"]
+        tags: ["#ばんえい競馬", "#帯広競馬場", "#ノーザンホースパーク", "#馬", "#写真"],
+        autoCheck: {
+          '帯広競馬場': ["#ばんえい競馬", "#帯広競馬場", "#馬"],
+          'ノーザンホースパーク': ["#ノーザンホースパーク", "#馬", "#写真"]
+        }
       },
       live: {
         fields: [
-          { id: 'program', icon: '📺', label: '番組名', options: ['（お気に入りの番組名1）', '（お気に入りの番組名2）'] }
+          { id: 'program', icon: '📺', label: '番組名', options: ['（お気に入りの番組名1）'] }
         ],
         text: "実況中！\n",
-        tags: ["#実況", "#TV", "#ラジオ", "#オンエア"]
+        tags: ["#実況", "#TV", "#ラジオ", "#オンエア"],
+        autoCheck: {}
       },
       food: {
         fields: [
-          { id: 'shop', icon: '🍽️', label: 'お店', options: ['（お気に入りカフェ）', '（お気に入りレストラン）'] }
+          { id: 'shop', icon: '🍽️', label: 'お店', options: ['（お気に入りカフェ）'] }
         ],
         text: "いただきます！\n",
-        tags: ["#札幌グルメ", "#ランチ", "#カフェ", "#美味しい"]
+        tags: ["#札幌グルメ", "#ランチ", "#カフェ", "#美味しい"],
+        autoCheck: {}
       }
     };
 
@@ -275,18 +272,17 @@
       return `${today.getFullYear()}.${today.getMonth() + 1}.${today.getDate()}`;
     }
 
-    // カテゴリーが変更された時の処理
     function changeCategory() {
+      // 切り替え時はショートカットを隠す
+      document.getElementById('shortcutArea').style.display = 'none';
+
       const category = document.getElementById('category').value;
       const currentData = data[category];
       
-      // 日付のセット
       document.getElementById('postDate').value = getTodayDate();
-      
-      // 本文とタグのセット
       document.getElementById('mainText').value = currentData.text;
       
-      // ハッシュタグの生成
+      // ハッシュタグの生成 (初期値はすべて false/チェックなし)
       const tagContainer = document.getElementById('hashtagContainer');
       tagContainer.innerHTML = '';
       currentData.tags.forEach(tag => {
@@ -296,7 +292,7 @@
         checkbox.type = 'checkbox';
         checkbox.name = 'hashtags';
         checkbox.value = tag;
-        checkbox.checked = true;
+        checkbox.checked = false; // ★初期値は外す
         label.appendChild(checkbox);
         label.appendChild(document.createTextNode(tag));
         tagContainer.appendChild(label);
@@ -310,22 +306,23 @@
         const fieldDiv = document.createElement('div');
         fieldDiv.className = 'dynamic-field';
         
-        // ラベル（アイコン付き）
         const labelDiv = document.createElement('div');
         labelDiv.className = 'icon-label';
         labelDiv.innerHTML = `${field.icon} <span>${field.label}</span>`;
         fieldDiv.appendChild(labelDiv);
 
-        // プルダウンを包むラッパー
         const selectWrapper = document.createElement('div');
         selectWrapper.className = 'select-wrapper';
 
-        // プルダウン作成
         const select = document.createElement('select');
         select.id = `select_${field.id}`;
-        select.dataset.icon = field.icon; // コピー時にアイコンを使うためデータを持たせる
         
-        // 選択肢を追加
+        // 「選択してください」という初期の空の選択肢を追加
+        const defaultOption = document.createElement('option');
+        defaultOption.value = "";
+        defaultOption.textContent = "選択してください";
+        select.appendChild(defaultOption);
+
         field.options.forEach(opt => {
           const option = document.createElement('option');
           option.value = opt;
@@ -333,7 +330,6 @@
           select.appendChild(option);
         });
         
-        // 「その他（自由入力）」を追加
         const otherOption = document.createElement('option');
         otherOption.value = "__other__";
         otherOption.textContent = "その他（自由入力）";
@@ -342,7 +338,6 @@
         selectWrapper.appendChild(select);
         fieldDiv.appendChild(selectWrapper);
 
-        // 自由入力用のテキストボックス（最初は非表示）
         const customInput = document.createElement('input');
         customInput.type = 'text';
         customInput.id = `custom_${field.id}`;
@@ -350,13 +345,27 @@
         customInput.placeholder = `${field.label}を入力してください`;
         fieldDiv.appendChild(customInput);
 
-        // プルダウン変更時のイベント（その他を選んだらテキストボックスを表示）
+        // プルダウン変更時のイベント（自由入力の表示 ＋ 連動ハッシュタグ）
         select.addEventListener('change', function() {
+          // 自由入力の切り替え
           if (this.value === '__other__') {
             customInput.style.display = 'block';
             customInput.focus();
           } else {
             customInput.style.display = 'none';
+          }
+
+          // 連動ハッシュタグの処理
+          const selectedValue = this.value;
+          const autoCheckRules = currentData.autoCheck;
+          if (autoCheckRules && autoCheckRules[selectedValue]) {
+            const targetTags = autoCheckRules[selectedValue];
+            const checkboxes = document.querySelectorAll('input[name="hashtags"]');
+            checkboxes.forEach(cb => {
+              if (targetTags.includes(cb.value)) {
+                cb.checked = true; // 関連タグをオンにする
+              }
+            });
           }
         });
 
@@ -364,7 +373,7 @@
       });
     }
 
-    // タグのフォーマット処理（複数時は2行に）
+    // ハッシュタグのフォーマット（複数ある場合は2行に分ける処理は維持）
     function getFormattedTags() {
       const checkboxes = document.querySelectorAll('input[name="hashtags"]:checked');
       const tags = Array.from(checkboxes).map(cb => cb.value);
@@ -381,19 +390,18 @@
     function copyToClipboard(text) {
       navigator.clipboard.writeText(text).then(() => {
         showToast();
+        // ★コピー成功時にショートカットエリアを表示する
+        document.getElementById('shortcutArea').style.display = 'block';
       }).catch(err => {
         alert('コピーに失敗しました。');
       });
     }
 
-    // 全体コピー処理
     function copyAll() {
-      // 1. 日付
       const date = document.getElementById('postDate').value.trim();
       let headerText = '';
       if (date) headerText += `📅${date}\n`;
 
-      // 2. 動的フィールド（プルダウン/自由入力）の値を収集
       const category = document.getElementById('category').value;
       const currentData = data[category];
       
@@ -404,7 +412,7 @@
         let val = '';
         if (select.value === '__other__') {
           val = custom.value.trim();
-        } else {
+        } else if (select.value !== "") {
           val = select.value;
         }
         
@@ -413,20 +421,15 @@
         }
       });
 
-      // 3. 本文
       const mainText = document.getElementById('mainText').value.trim();
-      
-      // 4. タグ
       const formattedTags = getFormattedTags();
       
-      // 結合
       let finalParts = [];
       if (headerText) finalParts.push(headerText.trim());
       if (mainText) finalParts.push(mainText);
       if (formattedTags) finalParts.push(formattedTags);
 
       const finalString = finalParts.join('\n\n');
-      
       copyToClipboard(finalString);
     }
 
@@ -438,15 +441,23 @@
     function showToast() {
       const toast = document.getElementById("toast");
       toast.className = "show";
-      // アニメーションを再スタートさせるための処理
       toast.style.animation = 'none';
-      toast.offsetHeight; /* trigger reflow */
+      toast.offsetHeight;
       toast.style.animation = null; 
-      
       setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 3000);
     }
 
-    // 画面読み込み時に初期化
+    // アプリを開く機能
+    function openApp(app) {
+      if (app === 'x') {
+        // Xの投稿画面（Web版）またはアプリが開きます
+        window.open('https://twitter.com/intent/tweet', '_blank');
+      } else if (app === 'ig') {
+        // Instagramを開きます
+        window.open('https://www.instagram.com/', '_blank');
+      }
+    }
+
     window.onload = changeCategory;
   </script>
 </body>
