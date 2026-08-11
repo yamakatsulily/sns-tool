@@ -10,23 +10,23 @@
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       background-color: #f2f2f7;
       color: #1c1c1e;
-      padding: 10px; /* 余白を縮小 */
+      padding: 10px;
       margin: 0;
-      font-size: 14px; /* 基本の文字サイズを少し小さく */
+      font-size: 14px;
     }
     h1 {
       font-size: 1.1rem;
       text-align: center;
-      margin-bottom: 12px; /* 余白を縮小 */
+      margin-bottom: 12px;
       color: #007aff;
       font-weight: 600;
     }
     .card {
       background: #ffffff;
-      border-radius: 12px; /* 丸みを少し小さく */
-      padding: 12px; /* 余白を縮小 */
+      border-radius: 12px;
+      padding: 12px;
       box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-      margin-bottom: 10px; /* カード間の余白を縮小 */
+      margin-bottom: 10px;
     }
     label {
       font-weight: 600;
@@ -40,7 +40,7 @@
     
     select, input[type="text"], textarea {
       width: 100%;
-      padding: 8px 10px; /* 入力欄の高さを縮小 */
+      padding: 8px 10px;
       background-color: #f2f2f7;
       border: 1px solid transparent;
       border-radius: 8px;
@@ -63,14 +63,15 @@
       color: #8e8e93;
       position: absolute;
       right: 10px;
-      top: 10px; /* 矢印の位置を調整 */
+      top: 10px;
       pointer-events: none;
     }
 
     textarea {
       resize: vertical;
-      min-height: 70px; /* テキストエリアの高さを縮小 */
+      min-height: 70px;
       line-height: 1.4;
+      margin-bottom: 6px;
     }
 
     .dynamic-field {
@@ -92,18 +93,49 @@
       color: #333;
       font-size: 0.9rem;
     }
-    .custom-input { display: none; margin-top: 6px; }
+
+    /* 追加・編集機能用のスタイル */
+    .add-row {
+      display: flex;
+      gap: 6px;
+      margin-top: 6px;
+    }
+    .add-row input {
+      margin-bottom: 0;
+    }
+    .btn-small {
+      width: auto;
+      padding: 8px 12px;
+      font-size: 0.85rem;
+      border-radius: 8px;
+      margin-bottom: 0;
+      white-space: nowrap;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+    }
+    .btn-outline {
+      background: transparent;
+      border: 1px solid #007aff;
+      color: #007aff;
+      width: 100%;
+      margin-bottom: 10px;
+    }
+    .btn-outline:active { background: #e5f1ff; }
+    .btn-fill { background-color: #007aff; color: #fff; }
+    
+    .custom-input-wrap { display: none; margin-top: 6px; }
 
     .hashtag-group {
       display: flex;
       flex-wrap: wrap;
-      gap: 6px; /* タグの隙間を縮小 */
+      gap: 6px;
       margin-bottom: 6px;
     }
     .hashtag-label {
       background: #f2f2f7;
       color: #007aff;
-      padding: 6px 10px; /* タグの大きさを縮小 */
+      padding: 6px 10px;
       border-radius: 16px;
       font-size: 0.85rem;
       font-weight: 500;
@@ -114,41 +146,18 @@
     }
     .hashtag-label input { margin: 0; width: 14px; height: 14px; accent-color: #007aff; }
 
-    button {
-      width: 100%;
-      padding: 12px; /* ボタンの高さを縮小 */
-      border: none;
-      border-radius: 10px;
-      font-size: 0.95rem;
-      font-weight: 600;
-      cursor: pointer;
-      margin-bottom: 8px;
-    }
-    .btn-main { background-color: #007aff; color: #ffffff; }
-    .btn-sub { background-color: #34c759; color: #ffffff; }
+    .btn-main { width: 100%; padding: 12px; border: none; border-radius: 10px; font-size: 0.95rem; font-weight: 600; cursor: pointer; margin-bottom: 8px; background-color: #007aff; color: #ffffff; }
+    .btn-sub { width: 100%; padding: 12px; border: none; border-radius: 10px; font-size: 0.95rem; font-weight: 600; cursor: pointer; margin-bottom: 8px; background-color: #34c759; color: #ffffff; }
 
-    /* アプリ連携ボタン用エリア */
-    #shortcutArea {
-      display: none;
-      animation: fadein 0.5s;
-    }
-    .shortcut-text {
-      text-align: center;
-      font-weight: bold;
-      color: #333;
-      margin-bottom: 8px;
-      font-size: 0.85rem;
-    }
-    .app-btn-group {
-      display: flex;
-      gap: 8px;
-    }
-    .btn-x { background-color: #000000; color: #ffffff; margin-bottom: 0; }
-    .btn-ig { background-color: #E1306C; color: #ffffff; margin-bottom: 0; }
+    #shortcutArea { display: none; animation: fadein 0.5s; }
+    .shortcut-text { text-align: center; font-weight: bold; color: #333; margin-bottom: 8px; font-size: 0.85rem; }
+    .app-btn-group { display: flex; gap: 8px; }
+    .btn-x { width: 100%; padding: 12px; border: none; border-radius: 10px; font-weight: 600; background-color: #000000; color: #ffffff; margin-bottom: 0; }
+    .btn-ig { width: 100%; padding: 12px; border: none; border-radius: 10px; font-weight: 600; background-color: #E1306C; color: #ffffff; margin-bottom: 0; }
 
     #toast {
       visibility: hidden;
-      min-width: 180px;
+      min-width: 220px;
       background-color: rgba(28, 28, 30, 0.9);
       color: #fff;
       text-align: center;
@@ -161,30 +170,18 @@
       transform: translateX(-50%);
       font-size: 0.85rem;
     }
-    #toast.show {
-      visibility: visible;
-      animation: fadein 0.3s, fadeout 0.4s 2.5s forwards;
-    }
-    @keyframes fadein { from {opacity: 0; transform: translateY(10px);} to {opacity: 1; transform: translateY(0);} }
-    @keyframes fadeout { from {opacity: 1;} to {opacity: 0; visibility: hidden;} }
+    #toast.show { visibility: visible; animation: fadein 0.3s, fadeout 0.4s forwards; }
+    @keyframes fadein { from {opacity: 0; transform: translateY(10px) translateX(-50%);} to {opacity: 1; transform: translateY(0) translateX(-50%);} }
 
-    /* ローディング表示用 */
-    #loading {
-      text-align: center;
-      padding: 20px;
-      font-weight: bold;
-      color: #007aff;
-    }
-    #appContent {
-      display: none; /* データが読み込めるまで隠す */
-    }
+    #loading { text-align: center; padding: 20px; font-weight: bold; color: #007aff; }
+    #appContent { display: none; }
   </style>
 </head>
 <body>
 
   <h1>SNS投稿アシスト</h1>
 
-  <div id="loading">データを読み込み中...⏳</div>
+  <div id="loading">スプレッドシートと通信中...⏳</div>
 
   <div id="appContent">
     <div class="card">
@@ -209,11 +206,19 @@
     </div>
 
     <div class="card">
-      <label for="mainText">Message</label>
+      <label for="mainText">Message (定型文)</label>
       <textarea id="mainText" placeholder="投稿の本文をここに入力します"></textarea>
+      <!-- 定型文保存ボタン -->
+      <button class="btn-small btn-outline" onclick="saveText()">💾 現在の文章を定型文として登録</button>
 
       <label>Hashtags</label>
       <div id="hashtagContainer" class="hashtag-group"></div>
+      
+      <!-- ハッシュタグ追加欄 -->
+      <div class="add-row">
+        <input type="text" id="newTagInput" placeholder="#追加したいタグ">
+        <button class="btn-small btn-fill" onclick="addNewTag()">＋追加</button>
+      </div>
     </div>
 
     <button class="btn-main" onclick="copyAll()">すべて合体してコピー</button>
@@ -228,16 +233,15 @@
     </div>
   </div>
 
-  <div id="toast">コピーしました！</div>
+  <div id="toast">メッセージ</div>
 
   <script>
-    // ★ここに先ほど発行したGASのURLをセットします！
-    const GAS_URL = 'https://script.google.com/macros/s/AKfycbyZa1dUXgry-97uTf4Fxq-VdYg6ws9QjyleklLvUG9-mj3y_2rlYadrqgYqvoj-b4iu/exec';
+    // 先ほどいただいたGASのURL
+    const GAS_URL = 'https://script.google.com/macros/s/AKfycbztI1mnv89xmOqk_ALZmozYwSQz585uj3LMJrg4DjBnEs9oB6k2XenxqyI5z8Oz2C4T/exec';
     
-    // スプレッドシートから読み込んだデータを保存する変数
+    // スプレッドシートのデータを保持する変数
     let appData = {};
 
-    // ★イベント連動チェックルールの定義（ここはHTML側に持たせます）
     const autoCheckRules = {
       'YOSAKOIソーラン祭り': ["#YOSAKOI", "#YOSAKOIソーラン", "#イベント"],
       'さっぽろ雪まつり': ["#札幌", "#イベント", "#写真"],
@@ -245,7 +249,6 @@
       'ノーザンホースパーク': ["#ノーザンホースパーク", "#馬", "#写真"]
     };
 
-    // アイコンとラベルの設定
     const fieldSettings = {
       event: [
         { id: 'eventName', icon: '🎟️', label: 'イベント名' },
@@ -263,7 +266,7 @@
       ]
     };
 
-    // 起動時にデータを取得する
+    // 起動時にデータを取得
     window.onload = function() {
       fetch(GAS_URL)
         .then(response => response.json())
@@ -275,13 +278,124 @@
         })
         .catch(error => {
           document.getElementById('loading').innerText = "データの読み込みに失敗しました😢";
-          console.error('Error fetching data:', error);
+          console.error('Error:', error);
         });
     };
+
+    // --- スプレッドシートに保存（送信）する共通関数 ---
+    function saveToServer(categoryId) {
+      showToast("保存中...⏳", 5000); // 保存中は消さない
+      
+      const payload = {
+        category: categoryId,
+        text: appData[categoryId].text,
+        newTags: appData[categoryId].tags,
+        newOptions: appData[categoryId].options
+      };
+
+      fetch(GAS_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain' }, // CORS回避のためtext/plain
+        body: JSON.stringify(payload)
+      })
+      .then(res => res.json())
+      .then(data => {
+        if(data.status === "success") {
+          showToast("✅ スプレッドシートに保存しました！", 2500);
+        } else {
+          showToast("❌ 保存エラー", 2500);
+        }
+      })
+      .catch(err => {
+        showToast("❌ 通信エラー", 2500);
+      });
+    }
+
+    // --- 追加・編集機能 ---
+
+    // 1. 定型文の保存
+    function saveText() {
+      const category = document.getElementById('category').value;
+      const newText = document.getElementById('mainText').value;
+      if (!appData[category]) appData[category] = { text: "", tags: [], options: [] };
+      appData[category].text = newText;
+      saveToServer(category);
+    }
+
+    // 2. ハッシュタグの追加
+    function addNewTag() {
+      const category = document.getElementById('category').value;
+      const input = document.getElementById('newTagInput');
+      let newTag = input.value.trim();
+      
+      if (!newTag) return;
+      if (!newTag.startsWith('#')) newTag = '#' + newTag; // #がなければ付ける
+
+      if (!appData[category]) appData[category] = { text: "", tags: [], options: [] };
+      
+      if (!appData[category].tags.includes(newTag)) {
+        appData[category].tags.push(newTag);
+        renderTags(category); // 画面を更新
+        saveToServer(category); // 保存
+      } else {
+        showToast("そのタグは既にあります", 2000);
+      }
+      input.value = '';
+    }
+
+    // 3. プルダウン選択肢の追加
+    function addOption(fieldId, category) {
+      const customInput = document.getElementById(`custom_${fieldId}`);
+      const newOpt = customInput.value.trim();
+      if (!newOpt) return;
+
+      if (!appData[category]) appData[category] = { text: "", tags: [], options: [] };
+      
+      if (!appData[category].options.includes(newOpt)) {
+        appData[category].options.push(newOpt);
+        
+        // 現在のセレクトボックスに選択肢を追加して、それを選ぶ
+        const select = document.getElementById(`select_${fieldId}`);
+        const newOptionEl = document.createElement('option');
+        newOptionEl.value = newOpt;
+        newOptionEl.textContent = newOpt;
+        
+        // 「その他」の直前に挿入する
+        select.insertBefore(newOptionEl, select.lastChild);
+        select.value = newOpt;
+        
+        // 入力欄を隠す
+        document.getElementById(`custom_wrap_${fieldId}`).style.display = 'none';
+        
+        saveToServer(category);
+      }
+    }
+
+
+    // --- 描画・更新機能 ---
 
     function getTodayDate() {
       const today = new Date();
       return `${today.getFullYear()}.${today.getMonth() + 1}.${today.getDate()}`;
+    }
+
+    // タグ部分だけを再描画する関数
+    function renderTags(category) {
+      const currentData = appData[category] || { text: "", tags: [], options: [] };
+      const tagContainer = document.getElementById('hashtagContainer');
+      tagContainer.innerHTML = '';
+      currentData.tags.forEach(tag => {
+        const label = document.createElement('label');
+        label.className = 'hashtag-label';
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.name = 'hashtags';
+        checkbox.value = tag;
+        checkbox.checked = false;
+        label.appendChild(checkbox);
+        label.appendChild(document.createTextNode(tag));
+        tagContainer.appendChild(label);
+      });
     }
 
     function changeCategory() {
@@ -294,25 +408,12 @@
       document.getElementById('postDate').value = getTodayDate();
       document.getElementById('mainText').value = currentData.text;
       
-      const tagContainer = document.getElementById('hashtagContainer');
-      tagContainer.innerHTML = '';
-      currentData.tags.forEach(tag => {
-        const label = document.createElement('label');
-        label.className = 'hashtag-label';
-        const checkbox = document.createElement('input');
-        checkbox.type = 'checkbox';
-        checkbox.name = 'hashtags';
-        checkbox.value = tag;
-        checkbox.checked = false; // 初期値はオフ
-        label.appendChild(checkbox);
-        label.appendChild(document.createTextNode(tag));
-        tagContainer.appendChild(label);
-      });
+      renderTags(category); // タグの描画
 
       const fieldsContainer = document.getElementById('dynamicFieldsContainer');
       fieldsContainer.innerHTML = '';
 
-      currentSettings.forEach((field, index) => {
+      currentSettings.forEach((field) => {
         const fieldDiv = document.createElement('div');
         fieldDiv.className = 'dynamic-field';
         
@@ -332,8 +433,6 @@
         defaultOption.textContent = "選択してください";
         select.appendChild(defaultOption);
 
-        // スプレッドシートの「オプション設定」から選択肢を生成
-        // （簡易的に、1つのプルダウンにつき全選択肢を入れる仕様にしています）
         currentData.options.forEach(opt => {
           const option = document.createElement('option');
           option.value = opt;
@@ -349,19 +448,33 @@
         selectWrapper.appendChild(select);
         fieldDiv.appendChild(selectWrapper);
 
+        // 自由入力＆登録ボタンのエリア
+        const customWrap = document.createElement('div');
+        customWrap.id = `custom_wrap_${field.id}`;
+        customWrap.className = 'custom-input-wrap';
+        customWrap.className = 'add-row';
+        customWrap.style.display = 'none'; // 初期非表示
+
         const customInput = document.createElement('input');
         customInput.type = 'text';
         customInput.id = `custom_${field.id}`;
-        customInput.className = 'custom-input';
         customInput.placeholder = `${field.label}を入力`;
-        fieldDiv.appendChild(customInput);
+
+        const addOptBtn = document.createElement('button');
+        addOptBtn.className = 'btn-small btn-fill';
+        addOptBtn.textContent = '登録';
+        addOptBtn.onclick = () => addOption(field.id, category);
+
+        customWrap.appendChild(customInput);
+        customWrap.appendChild(addOptBtn);
+        fieldDiv.appendChild(customWrap);
 
         select.addEventListener('change', function() {
           if (this.value === '__other__') {
-            customInput.style.display = 'block';
+            customWrap.style.display = 'flex';
             customInput.focus();
           } else {
-            customInput.style.display = 'none';
+            customWrap.style.display = 'none';
           }
 
           const selectedValue = this.value;
@@ -369,9 +482,7 @@
             const targetTags = autoCheckRules[selectedValue];
             const checkboxes = document.querySelectorAll('input[name="hashtags"]');
             checkboxes.forEach(cb => {
-              if (targetTags.includes(cb.value)) {
-                cb.checked = true;
-              }
+              if (targetTags.includes(cb.value)) cb.checked = true;
             });
           }
         });
@@ -395,7 +506,7 @@
 
     function copyToClipboard(text) {
       navigator.clipboard.writeText(text).then(() => {
-        showToast();
+        showToast("📋 コピーしました！", 3000);
         document.getElementById('shortcutArea').style.display = 'block';
       }).catch(err => {
         alert('コピーに失敗しました。');
@@ -421,9 +532,7 @@
           val = select.value;
         }
         
-        if (val) {
-          headerText += `${field.icon}${val}\n`;
-        }
+        if (val) headerText += `${field.icon}${val}\n`;
       });
 
       const mainText = document.getElementById('mainText').value.trim();
@@ -434,30 +543,31 @@
       if (mainText) finalParts.push(mainText);
       if (formattedTags) finalParts.push(formattedTags);
 
-      const finalString = finalParts.join('\n\n');
-      copyToClipboard(finalString);
+      copyToClipboard(finalParts.join('\n\n'));
     }
 
     function copyTagsOnly() {
-      const formattedTags = getFormattedTags();
-      copyToClipboard(formattedTags);
+      copyToClipboard(getFormattedTags());
     }
 
-    function showToast() {
+    let toastTimeout;
+    function showToast(msg, duration) {
       const toast = document.getElementById("toast");
+      toast.innerText = msg;
       toast.className = "show";
       toast.style.animation = 'none';
       toast.offsetHeight;
       toast.style.animation = null; 
-      setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 3000);
+      
+      clearTimeout(toastTimeout);
+      if(duration > 0) {
+        toastTimeout = setTimeout(() => { toast.className = toast.className.replace("show", ""); }, duration);
+      }
     }
 
     function openApp(app) {
-      if (app === 'x') {
-        window.open('https://twitter.com/intent/tweet', '_blank');
-      } else if (app === 'ig') {
-        window.open('https://www.instagram.com/', '_blank');
-      }
+      if (app === 'x') window.open('https://twitter.com/intent/tweet', '_blank');
+      else if (app === 'ig') window.open('https://www.instagram.com/', '_blank');
     }
   </script>
 </body>
